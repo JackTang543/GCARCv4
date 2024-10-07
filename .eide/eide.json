@@ -1,0 +1,178 @@
+{
+  "name": "GCARCv4",
+  "type": "ARM",
+  "dependenceList": [],
+  "srcDirs": [
+    "sAPP",
+    "sBSP",
+    "sDBG",
+    "sDRV",
+    "sMID",
+    "sUSER",
+    "sLIB/STM32F4xx_HAL_Driver"
+  ],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [
+      {
+        "path": "sLIB/DSP/arm_cortexM4lf_math.lib"
+      }
+    ],
+    "folders": []
+  },
+  "outDir": "build",
+  "deviceName": "STM32F405RGTx",
+  "packDir": ".pack/Keil/STM32F4xx_DFP.2.14.0",
+  "miscInfo": {
+    "uid": "5136ca547b6bd9d8570f40081f1ce8bf"
+  },
+  "targets": {
+    "Debug": {
+      "excludeList": [],
+      "toolchain": "AC6",
+      "compileConfig": {
+        "cpuType": "Cortex-M4",
+        "floatingPointHardware": "single",
+        "useCustomScatterFile": false,
+        "scatterFilePath": "<YOUR_SCATTER_FILE>.sct",
+        "storageLayout": {
+          "RAM": [
+            {
+              "tag": "IRAM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x20000000",
+                "size": "0x00020000"
+              },
+              "isChecked": true,
+              "noInit": false
+            },
+            {
+              "tag": "IRAM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x10000000",
+                "size": "0x00010000"
+              },
+              "isChecked": true,
+              "noInit": false
+            }
+          ],
+          "ROM": [
+            {
+              "tag": "IROM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x08000000",
+                "size": "0x00100000"
+              },
+              "isChecked": true,
+              "isStartup": true
+            }
+          ]
+        },
+        "options": "null"
+      },
+      "uploader": "STLink",
+      "uploadConfig": {
+        "bin": "",
+        "proType": "SWD",
+        "resetMode": "default",
+        "runAfterProgram": true,
+        "speed": 4000,
+        "address": "0x08000000",
+        "elFile": "None",
+        "optionBytes": ".eide/debug.st.option.bytes.ini",
+        "otherCmds": ""
+      },
+      "uploadConfigMap": {
+        "JLink": {
+          "bin": "",
+          "baseAddr": "",
+          "cpuInfo": {
+            "vendor": "null",
+            "cpuName": "null"
+          },
+          "proType": 1,
+          "speed": 8000,
+          "otherCmds": ""
+        }
+      },
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          ".",
+          "sAPP",
+          "sBSP",
+          "sDBG",
+          "sDRV",
+          "sMID",
+          "sUSER",
+          "sLIB/STM32F4xx_HAL_Driver/Inc",
+          "sLIB/CMSIS/Include",
+          "sLIB/CMSIS/Device/ST/STM32F4xx/Include",
+          "sLIB/CMSIS/Core/Include",
+          "sLIB/CMSIS/DSP/Include"
+        ],
+        "libList": [],
+        "defineList": [
+          "STM32F405xx"
+        ]
+      },
+      "builderOptions": {
+        "GCC": {
+          "version": 5,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": "--specs=nosys.specs --specs=nano.specs"
+          },
+          "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+          },
+          "asm-compiler": {
+            "ASM_FLAGS": ""
+          },
+          "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": "",
+            "LIB_FLAGS": "-lm"
+          }
+        },
+        "AC6": {
+          "version": 3,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "output-debug-info": "enable"
+          },
+          "c/cpp-compiler": {
+            "optimization": "level-0",
+            "language-c": "gnu11",
+            "language-cpp": "c++14",
+            "warnings": "ac5-like-warnings",
+            "short-enums#wchar": true
+          },
+          "asm-compiler": {
+            "$use": "asm-auto"
+          },
+          "linker": {
+            "output-format": "elf",
+            "misc-controls": "--diag_suppress=L6329"
+          }
+        }
+      }
+    }
+  },
+  "version": "3.5"
+}
