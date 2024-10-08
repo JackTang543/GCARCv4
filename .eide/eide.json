@@ -116,7 +116,9 @@
         ],
         "libList": [],
         "defineList": [
-          "STM32F405xx"
+          "STM32F405xx",
+          "USE_HAL_DRIVER",
+          "ARM_MATH_CM4"
         ]
       },
       "builderOptions": {

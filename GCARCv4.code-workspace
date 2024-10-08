@@ -7,8 +7,9 @@
     "settings": {
         "files.autoGuessEncoding": true,
         "C_Cpp.default.configurationProvider": "cl.eide",
-        "C_Cpp.errorSquiggles": "disabled",
+        "C_Cpp.errorSquiggles": "enabled",
         "files.associations": {
+            "*.cpp": "cpp",
             ".eideignore": "ignore",
             "*.a51": "a51",
             "*.h": "c",
@@ -16,9 +17,14 @@
             "*.hxx": "cpp",
             "*.hpp": "cpp",
             "*.c++": "cpp",
-            "*.cpp": "cpp",
             "*.cxx": "cpp",
-            "*.cc": "cpp"
+            "*.cc": "cpp",
+            "__config": "cpp",
+            "__verbose_abort": "cpp",
+            "cstddef": "cpp",
+            "cstdint": "cpp",
+            "initializer_list": "cpp",
+            "limits": "cpp"
         },
         "[yaml]": {
             "editor.insertSpaces": true,

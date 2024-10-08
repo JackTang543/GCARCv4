@@ -188,7 +188,7 @@
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
             <nBranchProt>0</nBranchProt>
-            <hadIRAM2>0</hadIRAM2>
+            <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>1</StupSel>
             <useUlib>0</useUlib>
@@ -248,12 +248,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x5000</Size>
+                <Size>0x20000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x100000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -331,7 +331,7 @@
             <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>6</v6Lang>
-            <v6LangP>7</v6LangP>
+            <v6LangP>6</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -339,7 +339,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F405xx</Define>
+              <Define>STM32F405xx,USE_HAL_DRIVER,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
               <IncludePath>.;sAPP;sBSP;sDBG;sDRV;sMID;sUSER;sLIB\STM32F4xx_HAL_Driver\Inc;sLIB\CMSIS\Include;sLIB\CMSIS\Device\ST\STM32F4xx\Include;sLIB\CMSIS\Core\Include;sLIB\CMSIS\DSP\Include</IncludePath>
             </VariousControls>
@@ -357,7 +357,7 @@
             <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F405xx</Define>
+              <Define>STM32F405xx,USE_HAL_DRIVER,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -372,7 +372,7 @@
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>d:\05_FullProject\13_9607_CarProj\01_Software\GCARCv4\&lt;YOUR_SCATTER_FILE&gt;.sct</ScatterFile>
+            <ScatterFile>&lt;YOUR_SCATTER_FILE&gt;.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -383,6 +383,51 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>SAPP</GroupName>
+          <Files>
+            <File>
+              <FileName>sAPP_PMDC.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sAPP/sAPP_PMDC.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SBSP</GroupName>
+          <Files>
+            <File>
+              <FileName>sBSP_DWT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sBSP/sBSP_DWT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SDBG</GroupName>
+          <Files>
+            <File>
+              <FileName>sDBG_Debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sDBG/sDBG_Debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>sDBG_UART.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sDBG/sDBG_UART.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SDRV</GroupName>
+          <Files>
+            <File>
+              <FileName>sDRV_DRV8870.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sDRV/sDRV_DRV8870.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>SUSER</GroupName>
           <Files>
             <File>
@@ -391,9 +436,19 @@
               <FilePath>sUSER/main.cpp</FilePath>
             </File>
             <File>
+              <FileName>sGCARCv4_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sUSER/sGCARCv4_hal_msp.c</FilePath>
+            </File>
+            <File>
               <FileName>startup_stm32f405xx.s</FileName>
               <FileType>2</FileType>
               <FilePath>sUSER/startup_stm32f405xx.s</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sUSER/stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
@@ -529,6 +584,16 @@
               <FileName>stm32f4xx_hal_fmpi2c_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_fmpsmbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpsmbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_fmpsmbus_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpsmbus_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_gpio.c</FileName>
@@ -771,6 +836,11 @@
               <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f4xx_ll_fmpi2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmpi2c.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f4xx_ll_fsmc.c</FileName>
               <FileType>1</FileType>
               <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c</FilePath>
@@ -844,6 +914,18 @@
         </Group>
         <Group>
           <GroupName>SLIB/STM32F4XX_HAL_DRIVER/SRC/LEGACY</GroupName>
+          <Files>
+            <File>
+              <FileName>stm32f4xx_hal_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/Legacy/stm32f4xx_hal_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_eth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sLIB/STM32F4xx_HAL_Driver/Src/Legacy/stm32f4xx_hal_eth.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>&lt;virtual_root&gt;</GroupName>
