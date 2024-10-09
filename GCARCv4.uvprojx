@@ -341,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F405xx,USE_HAL_DRIVER,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>.;sAPP;sBSP;sDBG;sDRV;sMID;sUSER;sLIB\STM32F4xx_HAL_Driver\Inc;sLIB\CMSIS\Include;sLIB\CMSIS\Device\ST\STM32F4xx\Include;sLIB\CMSIS\Core\Include;sLIB\CMSIS\DSP\Include</IncludePath>
+              <IncludePath>.;sAPP;sBSP;sDBG;sDRV;sMID;sUSER;sLIB\STM32F4xx_HAL_Driver\Inc;sLIB\CMSIS\Include;sLIB\CMSIS\Device\ST\STM32F4xx\Include;sLIB\CMSIS\Core\Include;sLIB\CMSIS\DSP\Include;sMID\sGenBtnDrv2;sMID\sLib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,6 +386,11 @@
           <GroupName>SAPP</GroupName>
           <Files>
             <File>
+              <FileName>sAPP_Btns.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sAPP/sAPP_Btns.cpp</FilePath>
+            </File>
+            <File>
               <FileName>sAPP_PMDC.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>sAPP/sAPP_PMDC.cpp</FilePath>
@@ -399,6 +404,21 @@
               <FileName>sBSP_DWT.c</FileName>
               <FileType>1</FileType>
               <FilePath>sBSP/sBSP_DWT.c</FilePath>
+            </File>
+            <File>
+              <FileName>sBSP_RCC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sBSP/sBSP_RCC.c</FilePath>
+            </File>
+            <File>
+              <FileName>sBSP_SPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sBSP/sBSP_SPI.c</FilePath>
+            </File>
+            <File>
+              <FileName>sBSP_SYS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sBSP/sBSP_SYS.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -424,6 +444,56 @@
               <FileName>sDRV_DRV8870.c</FileName>
               <FileType>1</FileType>
               <FilePath>sDRV/sDRV_DRV8870.c</FilePath>
+            </File>
+            <File>
+              <FileName>sDRV_ICM42688.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sDRV/sDRV_ICM42688.c</FilePath>
+            </File>
+            <File>
+              <FileName>sDRV_LED.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sDRV/sDRV_LED.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sDRV_LIS3MDLTR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sDRV/sDRV_LIS3MDLTR.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SMID/SLIB</GroupName>
+          <Files>
+            <File>
+              <FileName>sLib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sLib/sLib.c</FilePath>
+            </File>
+            <File>
+              <FileName>sLib_Ctrler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sLib/sLib_Ctrler.c</FilePath>
+            </File>
+            <File>
+              <FileName>sLib_Filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sLib/sLib_Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>sLib_Reg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sLib/sLib_Reg.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SMID/SGENBTNDRV2</GroupName>
+          <Files>
+            <File>
+              <FileName>sGenBtnDrv2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGenBtnDrv2/sGenBtnDrv2.c</FilePath>
             </File>
           </Files>
         </Group>

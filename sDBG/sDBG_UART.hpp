@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <string.h>
+#include <stdarg.h>
 
 
 enum class sDBG_UART_MODE{
@@ -31,10 +32,18 @@ public:
 
     void setSendMode(sDBG_UART_MODE send_mode);
 
-    void print(uint32_t number);
 
+    void printf(const char *fmt,...);
 
-    void println(uint32_t number);
+    void print();
+    void print(int number);
+    void print(unsigned int number);
+    void print(const char* str);
+
+    void println();
+    void println(int number);
+    void println(unsigned int number);
+    void println(const char* str);
 
 private:
 
@@ -43,6 +52,9 @@ private:
 
     //all instances use this variable
     static uint32_t blocking_max_time;
+
+    //used for printf function
+    char fmt_buf[128];
 
 
 

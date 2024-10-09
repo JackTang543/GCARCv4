@@ -8,12 +8,14 @@
 #include "arm_math.h"
 #include "math.h"
 
+#include "sDBG_Debug.h"
 
-#include "sAPP_PMDC.h"
+
 
 
 /*APP*/
-
+#include "sAPP_Btns.h"
+#include "sAPP_PMDC.h"
 
 /*MID*/
 
@@ -23,7 +25,18 @@
 
 
 /*LIB*/
+#include "sLib.h"
+
+/*DRV*/
+#include "sDRV_ICM42688.h"
+#include "sDRV_LIS3MDLTR.h"
+
+/*BSP*/
+#include "sBSP_DWT.h"
+#include "sBSP_RCC.h"
+#include "sBSP_SYS.h"
+#include "sBSP_SPI.h"
 
 
 
-
+extern sDBG_UART dbg;

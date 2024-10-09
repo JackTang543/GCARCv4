@@ -71,22 +71,57 @@ void sDBG_UART::setSendMode(sDBG_UART_MODE send_mode){
 }
 
 
+void sDBG_UART::printf(const char *fmt,...){
+    va_list ap;
+    va_start(ap,fmt);
+    vsprintf(fmt_buf,fmt,ap);
+    va_end(ap);
 
+    if(send_mode == sDBG_UART_MODE::BLOCKING){
+        HAL_UART_Transmit(&uart_handle, (uint8_t*)fmt_buf, (uint16_t)(strlen(fmt_buf)), blocking_max_time);
+    }
+}
+
+
+void sDBG_UART::print(){
+    printf(" ");
+}
 
 //print method overloading. print a number to uart
-void sDBG_UART::print(uint32_t number){
-    if(this->send_mode == sDBG_UART_MODE::BLOCKING){
-        char buf[10];
-        snprintf(buf, sizeof(buf), "%d", number);
-        HAL_UART_Transmit(&this->uart_handle, (uint8_t*)buf, (uint16_t)(strlen(buf)), blocking_max_time);
-    }
+void sDBG_UART::print(int number){
+    printf("%d",number);
+}
 
+void sDBG_UART::print(unsigned int number){
+    printf("%u",number);
 }
 
 
-void sDBG_UART::println(uint32_t number){
-    print(number);  print('\n');        //todo 有问题，得有一个专门打印换行符
+void sDBG_UART::print(const char* str){
+    printf("%s",str);
 }
+
+
+
+void sDBG_UART::println(){
+    printf("\n");
+}
+
+//print a number to uart,attach up "\n"
+void sDBG_UART::println(int number){
+    printf("%d\n",number);
+}
+
+void sDBG_UART::println(unsigned int number){
+    printf("%u\n",number);
+}
+
+
+void sDBG_UART::println(const char* str){
+    printf("%s\n",str);
+}
+
+
 
 
 

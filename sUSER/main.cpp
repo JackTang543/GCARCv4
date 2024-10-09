@@ -10,18 +10,25 @@
 //AC6 C++14
 
 
+
+
+sDBG_UART dbg;
+
 int main(){
     HAL_Init();
+    //sBSP_RCC_Init();
+
     HAL_InitTick(0);
+
+    dbg.init(USART1);
     
-    float32_t a = -1.5f;
-    float32_t b = 0;
+    uint32_t sys_clk_freq = HAL_RCC_GetSysClockFreq();
 
-    arm_abs_f32(&a,&b,1);
+    sAPP_Btns_Init();
 
-
+    dbg.printf("STM32 System Clock Freq: %u MHz\n", sys_clk_freq / 1000000);
+    dbg.printf("Hello,STM32F405RGT6    BySightseer.\n");
     
-    b = a + 50.0f;
 
 
     __GPIOC_CLK_ENABLE();
@@ -32,25 +39,104 @@ int main(){
     gpio.Pin   = GPIO_PIN_13;
     HAL_GPIO_Init(GPIOC,&gpio);
 
+    __GPIOC_CLK_ENABLE();
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_LOW;
+    gpio.Pin   = GPIO_PIN_4;
+    HAL_GPIO_Init(GPIOC,&gpio);
+
+    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4,GPIO_PIN_RESET);
     
-    sDBG_UART dbgUart;
-
-    UART_HandleTypeDef g_husart1;
-
-    dbgUart.init(USART1);
-
-    dbgUart.print(520);
-    dbgUart.println(1314);
 
 
+    /*SPI2 <-> IMU_SPI*/
+    sBSP_SPI_IMU_Init(SPI_BAUDRATEPRESCALER_64);   //11.25MBits/s
+
+    #define ICM_CS_Pin GPIO_PIN_0
+    #define ICM_CS_GPIO_Port GPIOC
+    #define LIS3_CS_Pin GPIO_PIN_1
+    #define LIS3_CS_GPIO_Port GPIOC
+
+    __GPIOA_CLK_ENABLE();
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_LOW;
+    gpio.Pin   = GPIO_PIN_8;
+    HAL_GPIO_Init(GPIOA,&gpio);
+
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+
+    /*把IMU的2个CS都上拉*/
+    __GPIOC_CLK_ENABLE();
+    //GPIO_InitTypeDef gpio = {0};
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_PULLUP;
+    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    gpio.Pin   = ICM_CS_Pin | LIS3_CS_Pin;
+    HAL_GPIO_Init(GPIOC,&gpio);
+    HAL_GPIO_WritePin(GPIOC,ICM_CS_Pin,GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC,LIS3_CS_Pin,GPIO_PIN_SET);
+
+    /*初始化传感器*/
+    if(sDRV_ICM_Init() != 0){
+        dbg.printf("IMU init failed.\n");
+        while(1);
+    }
+    
+    if(sDRV_LIS3_Init() != 0){
+        dbg.printf("MAG init failed.\n");
+        while(1);
+    }
+
+    
+
+    
 
     while(1){
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
+        //HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
+
+        sDRV_ICM_GetData();
+        sDRV_LIS3_GetData();
+
+        // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
+        // g_icm.gyro_x,g_icm.gyro_y,g_icm.gyro_z,g_icm.temp);
+
+        dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
+        g_lis3.temp);
+
         HAL_Delay(100);
+
+        //sGBD_Handler();
 
     }
 }
 
+/**
+ * 验证项目
+ * 
+ * LED 有源蜂鸣器 最小系统 调试串口 验证完成
+ * 
+ * 241009 PM05:14
+ * 4x按键+sGBD2验证完成
+ * 
+ * 241009 PM05:14
+ * ICM42688+LIS3 9轴惯导验证完成
+ * 
+ * 
+ * 电机驱动+GMR编码器+Track
+ * 
+ * 灯光控制 FeRAM 
+ * 
+ * 
+ * INA219 电池ADC
+ * 
+ * topUART I2C2
+ * 
+ * 
+ * 
+ */
 
 
 
