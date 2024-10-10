@@ -37,7 +37,8 @@
             "activityBar.background": "#142476",
             "titleBar.activeBackground": "#1D32A5",
             "titleBar.activeForeground": "#F9FAFE"
-        }
+        },
+        "commentTranslate.source": "Google"
     },
     "extensions": {
         "recommendations": [

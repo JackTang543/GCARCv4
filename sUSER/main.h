@@ -30,12 +30,14 @@
 /*DRV*/
 #include "sDRV_ICM42688.h"
 #include "sDRV_LIS3MDLTR.h"
+#include "sDRV_DRV8870.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"
 #include "sBSP_RCC.h"
 #include "sBSP_SYS.h"
 #include "sBSP_SPI.h"
+#include "sBSP_TIM.h"
 
 
 

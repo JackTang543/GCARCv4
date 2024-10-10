@@ -16,7 +16,7 @@ sDBG_UART dbg;
 
 int main(){
     HAL_Init();
-    //sBSP_RCC_Init();
+    sBSP_RCC_Init();
 
     HAL_InitTick(0);
 
@@ -78,16 +78,49 @@ int main(){
     HAL_GPIO_WritePin(GPIOC,ICM_CS_Pin,GPIO_PIN_SET);
     HAL_GPIO_WritePin(GPIOC,LIS3_CS_Pin,GPIO_PIN_SET);
 
-    /*初始化传感器*/
-    if(sDRV_ICM_Init() != 0){
-        dbg.printf("IMU init failed.\n");
-        while(1);
-    }
+    __GPIOA_CLK_ENABLE();
+    //GPIO_InitTypeDef gpio = {0};
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    gpio.Pin   = GPIO_PIN_0 | GPIO_PIN_1| GPIO_PIN_2| GPIO_PIN_3;
+    HAL_GPIO_Init(GPIOA,&gpio);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET);
+
+
+//     sBSP_TIM_Motor_Init();
+//     /*actual freq:21KHz*/
+//     sBSP_TIM_Motor_SetPWMFreq(20000);
+
+
+//     sBSP_TIM_Motor_L1SetEN(1);
+//     sBSP_TIM_Motor_L2SetEN(1);
+//     sBSP_TIM_Motor_R1SetEN(1);
+//     sBSP_TIM_Motor_R2SetEN(1);
+
+
+//    sBSP_TIM_Motor_L1SetDuty(50);
+//    sBSP_TIM_Motor_R1SetDuty(50);
+
+
+    sDRV_DRV8870_Init();
+    sDRV_DRV8870_SetLeftPct(-20);
+
+    sDRV_DRV8870_SetRightPct(-20);
+
+    // /*初始化传感器*/
+    // if(sDRV_ICM_Init() != 0){
+    //     dbg.printf("IMU init failed.\n");
+    //     while(1);
+    // }
     
-    if(sDRV_LIS3_Init() != 0){
-        dbg.printf("MAG init failed.\n");
-        while(1);
-    }
+    // if(sDRV_LIS3_Init() != 0){
+    //     dbg.printf("MAG init failed.\n");
+    //     while(1);
+    // }
 
     
 
@@ -97,18 +130,40 @@ int main(){
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
         //HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
 
-        sDRV_ICM_GetData();
-        sDRV_LIS3_GetData();
+        //sDRV_ICM_GetData();
+        //sDRV_LIS3_GetData();
 
         // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
         // g_icm.gyro_x,g_icm.gyro_y,g_icm.gyro_z,g_icm.temp);
 
-        dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
-        g_lis3.temp);
+        // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
+        // g_lis3.temp);
 
         HAL_Delay(100);
 
+        
+
         //sGBD_Handler();
+
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_RESET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_SET);
+        // HAL_Delay(1000);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET);
+        // HAL_Delay(1000);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_SET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_SET);
+        // HAL_Delay(1000);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_RESET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_SET);
+        // HAL_Delay(1000);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_SET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET);
+        // HAL_Delay(1000);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_SET);
+        // HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_SET);
+        // HAL_Delay(1000);
+
 
     }
 }
@@ -121,11 +176,15 @@ int main(){
  * 241009 PM05:14
  * 4x按键+sGBD2验证完成
  * 
- * 241009 PM05:14
+ * 241009 PM05:30
  * ICM42688+LIS3 9轴惯导验证完成
  * 
  * 
- * 电机驱动+GMR编码器+Track
+ * 241010 PM08:22
+ * 电机驱动 验证完成
+ * 
+ * 
+ * GMR编码器+Track
  * 
  * 灯光控制 FeRAM 
  * 
