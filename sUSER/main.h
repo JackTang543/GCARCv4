@@ -31,6 +31,7 @@
 #include "sDRV_ICM42688.h"
 #include "sDRV_LIS3MDLTR.h"
 #include "sDRV_DRV8870.h"
+#include "sDRV_GMR.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"

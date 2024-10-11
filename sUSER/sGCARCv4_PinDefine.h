@@ -3,7 +3,7 @@
 /*This file is used to define the pin assignments for the sGCARCv4*/
 
 
-
+/*Motor PWM*/
 #define ML_PWM1_Pin         GPIO_PIN_0
 #define ML_PWM1_GPIO_Port   GPIOA
 #define ML_PWM2_Pin         GPIO_PIN_1
@@ -13,4 +13,13 @@
 #define MR_PWM2_Pin         GPIO_PIN_3
 #define MR_PWM2_GPIO_Port   GPIOA
 
+/*GMR*/
+#define GMR_RA_Pin          GPIO_PIN_4
+#define GMR_RA_GPIO_Port    GPIOB
+#define GMR_RB_Pin          GPIO_PIN_5
+#define GMR_RB_GPIO_Port    GPIOB
+#define GMR_LA_Pin          GPIO_PIN_6
+#define GMR_LA_GPIO_Port    GPIOB
+#define GMR_LB_Pin          GPIO_PIN_7
+#define GMR_LB_GPIO_Port    GPIOB
 

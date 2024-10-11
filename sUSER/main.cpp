@@ -91,6 +91,16 @@ int main(){
     HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET);
 
 
+    __GPIOC_CLK_ENABLE();
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_LOW;
+    gpio.Pin   = GPIO_PIN_12;
+    HAL_GPIO_Init(GPIOC,&gpio);
+
+    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_12,GPIO_PIN_RESET);
+
+
 //     sBSP_TIM_Motor_Init();
 //     /*actual freq:21KHz*/
 //     sBSP_TIM_Motor_SetPWMFreq(20000);
@@ -107,9 +117,13 @@ int main(){
 
 
     sDRV_DRV8870_Init();
-    sDRV_DRV8870_SetLeftPct(-20);
+    sDRV_DRV8870_SetLeftPct(100);
 
-    sDRV_DRV8870_SetRightPct(-20);
+    sDRV_DRV8870_SetRightPct(100);
+
+    sDRV_GMR_Init();
+    
+
 
     // /*初始化传感器*/
     // if(sDRV_ICM_Init() != 0){
@@ -127,7 +141,13 @@ int main(){
     
 
     while(1){
+        sDRV_GMR_Handler();
+
+        dbg.printf("%6.2f,%6.2f\n",sDRV_GMR_GetLeftRPM(),sDRV_GMR_GetRightRPM());
+
+
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
+        
         //HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
 
         //sDRV_ICM_GetData();
@@ -139,7 +159,7 @@ int main(){
         // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
         // g_lis3.temp);
 
-        HAL_Delay(100);
+        HAL_Delay(10);
 
         
 
@@ -183,8 +203,12 @@ int main(){
  * 241010 PM08:22
  * 电机驱动 验证完成
  * 
+ * 241011 PM7:05
+ * GMR编码器 验证完成
  * 
- * GMR编码器+Track
+ * 
+ * Track寻迹管
+ * 
  * 
  * 灯光控制 FeRAM 
  * 
@@ -194,9 +218,27 @@ int main(){
  * topUART I2C2
  * 
  * 
+ * FreeRTOS移植
+ * 
+ * 
+ * cmBacktrace移植完成
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  */
 
-
+/**
+ * 笔记
+ * 
+ * 241011 PM
+ * 如果发现C++语法报错,检查一下是否在.c/.h(有extern"C")的文件里引用了C++头文件,比如main.h
+ * 
+ * 
+ * 
+ * 
+ */
 
 

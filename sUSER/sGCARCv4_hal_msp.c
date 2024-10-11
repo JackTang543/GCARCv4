@@ -53,5 +53,35 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle){
     }
 }
 
-
+void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef* tim_encoderHandle){
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    if(tim_encoderHandle->Instance==TIM3){
+        __HAL_RCC_TIM3_CLK_ENABLE();
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**TIM3 GPIO Configuration
+        PB4     ------> TIM3_CH1
+        PB5     ------> TIM3_CH2
+        */
+        GPIO_InitStruct.Pin = GMR_RA_Pin|GMR_RB_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    }
+    else if(tim_encoderHandle->Instance==TIM4){
+        __HAL_RCC_TIM4_CLK_ENABLE();
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**TIM4 GPIO Configuration
+        PB6     ------> TIM4_CH1
+        PB7     ------> TIM4_CH2
+        */
+        GPIO_InitStruct.Pin = GMR_LA_Pin|GMR_LB_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    }
+}
 

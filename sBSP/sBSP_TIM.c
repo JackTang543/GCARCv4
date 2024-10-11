@@ -1,9 +1,13 @@
 #include "sBSP_TIM.h"
 
+#include "sDBG_Debug.h"
+
 #include "sGCARCv4_hal_msp.h"
 
 
-//241009 PM08:17 sGCARCv4
+//first modify at 241009 PM08:17 sGCARCv4
+////completed at 241009 PM08:17 sGCARCv4
+//update at 241011 PM05:10
 //bySightseer. inHNIP9607
 
 /*Given the timer clock freq,target freq,and ARR value,auto calculate the required PSC value*/
@@ -11,7 +15,7 @@
         ((__TIM_CLK_FREQ / (__TARGET_FREQ * (__TIM_ARR_VAL + 1))) - 1)
 
 
-/*TIM2 -> 2xMotor*/
+//todo TIM2 -> 2xMotor
 //CH1->ML_PWM1,CH2->ML_PWM2,CH3->MR_PWM1,CH4->MR_PWM2
 TIM_HandleTypeDef g_htim2;
 //TIM2 input clock frequency,the timer clock is provided by the APB1 bus(x2)
@@ -20,6 +24,17 @@ TIM_HandleTypeDef g_htim2;
 //pwm duty accuracy=0.1%,max frequency=84KHz
 const uint32_t TIM2_ARRVal = 1000 - 1;
 const uint32_t TIM2_PSCVal = 0;
+
+//todo TIM3 -> RightGMR
+//CH1->GMR_RA,CH2->GMR_RB
+TIM_HandleTypeDef g_htim3;
+
+//todo TIM4 -> LeftGMR
+//CH1->GMR_LA,CH2->GMR_LB
+TIM_HandleTypeDef g_htim4;
+
+
+
 
 
 
@@ -97,6 +112,100 @@ void sBSP_TIM_Motor_R2SetDuty(float percent){
     __HAL_TIM_SET_COMPARE(&g_htim2,TIM_CHANNEL_4,(uint32_t)(percent * 10.0f));
 }
 
+
+//tim3
+void sBSP_TIM_GMRR_Init(){
+    /*init the timer*/
+    g_htim3.Instance               = TIM3;
+    g_htim3.Init.Prescaler         = 0;
+    g_htim3.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    g_htim3.Init.Period            = 65535;
+    g_htim3.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    g_htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    
+    /*init encoder mode*/
+    TIM_Encoder_InitTypeDef encoder = {0};
+    encoder.EncoderMode            = TIM_ENCODERMODE_TI12;      //! 4倍频模式
+    encoder.IC1Polarity            = TIM_ICPOLARITY_RISING;
+    encoder.IC1Selection           = TIM_ICSELECTION_DIRECTTI;
+    encoder.IC1Prescaler           = TIM_ICPSC_DIV1;
+    encoder.IC1Filter              = 0x7;
+    encoder.IC2Polarity            = TIM_ICPOLARITY_RISING;
+    encoder.IC2Selection           = TIM_ICSELECTION_DIRECTTI;
+    encoder.IC2Prescaler           = TIM_ICPSC_DIV1;
+    encoder.IC2Filter              = 0x7;
+    if (HAL_TIM_Encoder_Init(&g_htim3, &encoder) != HAL_OK){
+        Error_Handler();
+    }
+
+    /*no master mode*/
+    TIM_MasterConfigTypeDef master = {0};
+    master.MasterOutputTrigger = TIM_TRGO_RESET;
+    master.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    if (HAL_TIMEx_MasterConfigSynchronization(&g_htim3, &master) != HAL_OK){
+        Error_Handler();
+    }
+}
+
+
+inline uint32_t sBSP_TIM_GMRR_Get(){
+    return __HAL_TIM_GET_COUNTER(&g_htim3);
+}
+
+inline void sBSP_TIM_GMRR_Set(uint32_t count){
+    __HAL_TIM_SET_COUNTER(&g_htim3,count);
+}
+
+void sBSP_TIM_GMRR_SetEN(bool is_en){
+    is_en ? HAL_TIM_Encoder_Start(&g_htim3,TIM_CHANNEL_ALL) : HAL_TIM_Encoder_Stop(&g_htim3,TIM_CHANNEL_ALL);
+}
+
+
+//tim4
+void sBSP_TIM_GMRL_Init(){
+    /*init the timer*/
+    g_htim4.Instance               = TIM4;
+    g_htim4.Init.Prescaler         = 0;
+    g_htim4.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    g_htim4.Init.Period            = 65535;
+    g_htim4.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    g_htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    
+    /*init encoder mode*/
+    TIM_Encoder_InitTypeDef encoder = {0};
+    encoder.EncoderMode            = TIM_ENCODERMODE_TI12;      //! 4倍频模式
+    encoder.IC1Polarity            = TIM_ICPOLARITY_RISING;
+    encoder.IC1Selection           = TIM_ICSELECTION_DIRECTTI;
+    encoder.IC1Prescaler           = TIM_ICPSC_DIV1;
+    encoder.IC1Filter              = 0x7;
+    encoder.IC2Polarity            = TIM_ICPOLARITY_RISING;
+    encoder.IC2Selection           = TIM_ICSELECTION_DIRECTTI;
+    encoder.IC2Prescaler           = TIM_ICPSC_DIV1;
+    encoder.IC2Filter              = 0x7;
+    if (HAL_TIM_Encoder_Init(&g_htim4, &encoder) != HAL_OK){
+        Error_Handler();
+    }
+
+    /*no master mode*/
+    TIM_MasterConfigTypeDef master = {0};
+    master.MasterOutputTrigger = TIM_TRGO_RESET;
+    master.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    if (HAL_TIMEx_MasterConfigSynchronization(&g_htim4, &master) != HAL_OK){
+        Error_Handler();
+    }
+}
+
+inline uint32_t sBSP_TIM_GMRL_Get(){
+    return __HAL_TIM_GET_COUNTER(&g_htim4);
+}
+
+inline void sBSP_TIM_GMRL_Set(uint32_t count){
+    __HAL_TIM_SET_COUNTER(&g_htim4,count);
+}
+
+void sBSP_TIM_GMRL_SetEN(bool is_en){
+    is_en ? HAL_TIM_Encoder_Start(&g_htim4,TIM_CHANNEL_ALL) : HAL_TIM_Encoder_Stop(&g_htim4,TIM_CHANNEL_ALL);
+}
 
 
 
