@@ -32,6 +32,9 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle){
     if(tim_pwmHandle->Instance==TIM2){
         __HAL_RCC_TIM2_CLK_ENABLE();
     }
+    else if(tim_pwmHandle->Instance==TIM12){
+        __HAL_RCC_TIM12_CLK_ENABLE();
+    }
 }
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle){
@@ -50,6 +53,18 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle){
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
         GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    }
+    else if(timHandle->Instance==TIM12){
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**TIM12 GPIO Configuration
+    PB14     ------> TIM12_CH1
+    */
+    GPIO_InitStruct.Pin = LIGHT_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF9_TIM12;
+    HAL_GPIO_Init(LIGHT_GPIO_Port, &GPIO_InitStruct);
     }
 }
 

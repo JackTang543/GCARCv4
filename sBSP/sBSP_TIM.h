@@ -34,6 +34,12 @@ void sBSP_TIM_GMRL_Set(uint32_t count);
 void sBSP_TIM_GMRL_SetEN(bool is_en);
 
 
+void sBSP_TIM_Light_Init();
+void sBSP_TIM_Light_SetPWMFreq(uint32_t freq);
+void sBSP_TIM_Light_SetEN(bool is_en);
+void sBSP_TIM_Light_Set(float percent);
+
+
 
 #ifdef __cplusplus
 }

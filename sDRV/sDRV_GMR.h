@@ -1,5 +1,4 @@
-#ifndef __SDRV_GMR_H__
-#define __SDRV_GMR_H__
+#pragma once
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -13,7 +12,8 @@ float sDRV_GMR_GetLeftRPM();
 float sDRV_GMR_GetRightRPM();
 void sDRV_GMR_Handler();
 
+
+
 #ifdef __cplusplus
 }
-#endif
 #endif

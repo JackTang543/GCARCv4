@@ -23,3 +23,8 @@
 #define GMR_LB_Pin          GPIO_PIN_7
 #define GMR_LB_GPIO_Port    GPIOB
 
+/*Light*/
+#define LIGHT_Pin           GPIO_PIN_14
+#define LIGHT_GPIO_Port     GPIOB
+
+

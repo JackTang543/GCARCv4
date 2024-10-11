@@ -35,6 +35,14 @@ TIM_HandleTypeDef g_htim4;
 
 
 
+//todo TIM12_CH1 -> Light
+TIM_HandleTypeDef g_htim12;
+#define TIM12_CLK_FREQ  (84000000u)
+//pwm duty accuracy=0.1%,max frequency=84KHz
+const uint32_t TIM12_ARRVal = 1000 - 1;
+const uint32_t TIM12_PSCVal = 0;
+
+
 
 
 
@@ -205,6 +213,50 @@ inline void sBSP_TIM_GMRL_Set(uint32_t count){
 
 void sBSP_TIM_GMRL_SetEN(bool is_en){
     is_en ? HAL_TIM_Encoder_Start(&g_htim4,TIM_CHANNEL_ALL) : HAL_TIM_Encoder_Stop(&g_htim4,TIM_CHANNEL_ALL);
+}
+
+
+
+
+
+
+//tim12
+void sBSP_TIM_Light_Init(){
+    g_htim12.Instance               = TIM12;
+    g_htim12.Init.Prescaler         = TIM12_PSCVal;
+    g_htim12.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    g_htim12.Init.Period            = TIM12_ARRVal;
+    g_htim12.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    g_htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    if (HAL_TIM_PWM_Init(&g_htim12) != HAL_OK){
+        Error_Handler();
+    }
+
+    TIM_OC_InitTypeDef oc = {0};
+    oc.OCMode       = TIM_OCMODE_PWM1;
+    oc.Pulse        = 0;
+    oc.OCPolarity   = TIM_OCPOLARITY_HIGH;
+    oc.OCFastMode   = TIM_OCFAST_DISABLE;
+    if (HAL_TIM_PWM_ConfigChannel(&g_htim12, &oc, TIM_CHANNEL_1) != HAL_OK){
+        Error_Handler();
+    }
+
+    HAL_TIM_MspPostInit(&g_htim12);
+}
+
+void sBSP_TIM_Light_SetPWMFreq(uint32_t freq){
+    //Given ARR=999,input freq range:2Hz to 84KHz
+    __HAL_TIM_SET_PRESCALER(&g_htim12,__TIM_GET_PSC(TIM12_CLK_FREQ,freq,TIM12_ARRVal));
+}
+
+void sBSP_TIM_Light_SetEN(bool is_en){
+    is_en ? HAL_TIM_PWM_Start(&g_htim12,TIM_CHANNEL_1) : HAL_TIM_PWM_Stop(&g_htim12,TIM_CHANNEL_1);
+}
+
+void sBSP_TIM_Light_Set(float percent){
+    if(percent > 100.0f){percent = 100.0f;}
+    if(percent < 0.0f)  {percent = 0.0f;}
+    __HAL_TIM_SET_COMPARE(&g_htim12,TIM_CHANNEL_1,(uint32_t)(percent * 10.0f));
 }
 
 

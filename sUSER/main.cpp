@@ -101,6 +101,11 @@ int main(){
     HAL_GPIO_WritePin(GPIOC,GPIO_PIN_12,GPIO_PIN_RESET);
 
 
+    
+    sDRV_PL_Init();
+    sDRV_PL_SetBrightness(50);
+
+
 //     sBSP_TIM_Motor_Init();
 //     /*actual freq:21KHz*/
 //     sBSP_TIM_Motor_SetPWMFreq(20000);
@@ -141,12 +146,21 @@ int main(){
     
 
     while(1){
-        sDRV_GMR_Handler();
+        //sDRV_GMR_Handler();
 
-        dbg.printf("%6.2f,%6.2f\n",sDRV_GMR_GetLeftRPM(),sDRV_GMR_GetRightRPM());
+        //dbg.printf("%6.2f,%6.2f\n",sDRV_GMR_GetLeftRPM(),sDRV_GMR_GetRightRPM());
 
 
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
+
+        for(int i = 0;i < 100;i++){
+            sDRV_PL_SetBrightness(i);
+            HAL_Delay(20);
+        }
+        for(int i = 100;i != 0;i--){
+            sDRV_PL_SetBrightness(i);
+            HAL_Delay(20);
+        }
         
         //HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
 
@@ -159,7 +173,7 @@ int main(){
         // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
         // g_lis3.temp);
 
-        HAL_Delay(10);
+        HAL_Delay(100);
 
         
 
@@ -210,10 +224,17 @@ int main(){
  * Track寻迹管
  * 
  * 
- * 灯光控制 FeRAM 
+ * 灯光控制
+ * 
+ * 
+ * FeRAM 
+ * 
+ * 
+ * OLED
  * 
  * 
  * INA219 电池ADC
+ * 
  * 
  * topUART I2C2
  * 
@@ -222,6 +243,15 @@ int main(){
  * 
  * 
  * cmBacktrace移植完成
+ * 
+ * 
+ * 上层代码
+ * 
+ * 
+ * PMDC C++
+ * 
+ * 
+ * 
  * 
  * 
  * 

@@ -24,7 +24,8 @@
             "cstddef": "cpp",
             "cstdint": "cpp",
             "initializer_list": "cpp",
-            "limits": "cpp"
+            "limits": "cpp",
+            "vector": "cpp"
         },
         "[yaml]": {
             "editor.insertSpaces": true,
