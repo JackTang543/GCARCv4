@@ -121,14 +121,44 @@ int main(){
 //    sBSP_TIM_Motor_R1SetDuty(50);
 
 
-    sDRV_DRV8870_Init();
-    sDRV_DRV8870_SetLeftPct(100);
+    // sDRV_DRV8870_Init();
+    // sDRV_DRV8870_SetLeftPct(100);
 
-    sDRV_DRV8870_SetRightPct(100);
+    // sDRV_DRV8870_SetRightPct(100);
 
-    sDRV_GMR_Init();
+    // sDRV_GMR_Init();
+
+    sBSP_I2C1_Init(400000);
+    sDRV_MB85RCxx_Init();
     
 
+    uint8_t dat[128];
+
+    sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
+
+
+    dbg.printf("Raw:\n");
+
+    for(int i = 0;i < (128/16);i++){
+        for(int j = 0;j < 16;j++){
+        dbg.printf("0x%0X ",dat[i*16+j]);
+        }
+        dbg.println();
+    }
+
+    dbg.printf("Write:\n");
+
+    //sDRV_MB85RCxx_WriteByte(0x50,0xA1);
+    sDRV_MB85RCxx_Format(0xF2);
+
+    sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
+
+    for(int i = 0;i < (128/16);i++){
+        for(int j = 0;j < 16;j++){
+        dbg.printf("0x%0X ",dat[i*16 + j]);
+        }
+        dbg.println();
+    }
 
     // /*初始化传感器*/
     // if(sDRV_ICM_Init() != 0){
@@ -153,14 +183,14 @@ int main(){
 
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
 
-        for(int i = 0;i < 100;i++){
-            sDRV_PL_SetBrightness(i);
-            HAL_Delay(20);
-        }
-        for(int i = 100;i != 0;i--){
-            sDRV_PL_SetBrightness(i);
-            HAL_Delay(20);
-        }
+        // for(int i = 0;i < 100;i++){
+        //     sDRV_PL_SetBrightness(i);
+        //     HAL_Delay(20);
+        // }
+        // for(int i = 100;i != 0;i--){
+        //     sDRV_PL_SetBrightness(i);
+        //     HAL_Delay(20);
+        // }
         
         //HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
 
@@ -217,17 +247,18 @@ int main(){
  * 241010 PM08:22
  * 电机驱动 验证完成
  * 
- * 241011 PM7:05
+ * 241011 PM07:05
  * GMR编码器 验证完成
+ * 
+ * 241011 PM08:58
+ * 灯光控制 验证完成
+ * 
+ * 241012 AM10:25
+ * FeRAM 验证完成
  * 
  * 
  * Track寻迹管
  * 
- * 
- * 灯光控制
- * 
- * 
- * FeRAM 
  * 
  * 
  * OLED
@@ -249,12 +280,6 @@ int main(){
  * 
  * 
  * PMDC C++
- * 
- * 
- * 
- * 
- * 
- * 
  * 
  * 
  * 

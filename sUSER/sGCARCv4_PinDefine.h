@@ -27,4 +27,14 @@
 #define LIGHT_Pin           GPIO_PIN_14
 #define LIGHT_GPIO_Port     GPIOB
 
+/*I2C*/
+#define BI2C_SCL_Pin GPIO_PIN_8
+#define BI2C_SCL_GPIO_Port GPIOB
+#define BI2C_SDA_Pin GPIO_PIN_9
+#define BI2C_SDA_GPIO_Port GPIOB
+#define EI2C_SCL_Pin GPIO_PIN_10
+#define EI2C_SCL_GPIO_Port GPIOB
+#define EI2C_SDA_Pin GPIO_PIN_11
+#define EI2C_SDA_GPIO_Port GPIOB
+
 

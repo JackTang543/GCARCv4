@@ -33,6 +33,7 @@
 #include "sDRV_DRV8870.h"
 #include "sDRV_GMR.h"
 #include "sDRV_PwrLight.h"
+#include "sDRV_MB85RCxx.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"
@@ -40,6 +41,8 @@
 #include "sBSP_SYS.h"
 #include "sBSP_SPI.h"
 #include "sBSP_TIM.h"
+#include "sBSP_I2C.h"
+
 
 
 

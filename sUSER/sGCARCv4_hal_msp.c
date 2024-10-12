@@ -100,3 +100,52 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef* tim_encoderHandle){
     }
 }
 
+
+
+void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c){
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    if(hi2c->Instance == I2C1){
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**I2C1 GPIO Configuration
+        PB8     ------> I2C1_SCL
+        PB9     ------> I2C1_SDA
+        */
+        GPIO_InitStruct.Pin = BI2C_SCL_Pin|BI2C_SDA_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+        __HAL_RCC_I2C1_CLK_ENABLE();
+
+        // HAL_NVIC_SetPriority(I2C1_EV_IRQn, 1, 0);
+        // HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+        // HAL_NVIC_SetPriority(I2C1_ER_IRQn, 1, 0);
+        // HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
+    }
+    else if(hi2c->Instance == I2C2){
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**I2C2 GPIO Configuration
+        PB10     ------> I2C2_SCL
+        PB11     ------> I2C2_SDA
+        */
+        GPIO_InitStruct.Pin = EI2C_SCL_Pin|EI2C_SDA_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+        __HAL_RCC_I2C2_CLK_ENABLE();
+
+        // HAL_NVIC_SetPriority(I2C2_EV_IRQn, 1, 0);
+        // HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
+        // HAL_NVIC_SetPriority(I2C2_ER_IRQn, 1, 0);
+        // HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
+    }
+}
+
+
+
+
