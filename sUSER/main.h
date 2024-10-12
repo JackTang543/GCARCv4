@@ -11,7 +11,8 @@
 
 #include "sDBG_Debug.h"
 
-
+#include "FreeRTOS.h"
+#include "task.h"
 
 
 /*APP*/

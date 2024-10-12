@@ -12,7 +12,17 @@
 
 
 
+
+
 sDBG_UART dbg;
+
+void uart(void* param){
+    for(;;){
+        dbg.print("Task uart\n");
+        vTaskDelay(100);
+    }
+}
+
 
 int main(){
     HAL_Init();
@@ -145,9 +155,11 @@ int main(){
     sG2D_UpdateScreen();
 
     sBSP_ADC_Init();
+
+    xTaskCreate(uart        , "OLEDUp"      ,  256, NULL, 1, NULL);
     
-    
-    
+    dbg.printf("FreeRTOS启动任务调度\n");
+    vTaskStartScheduler();
 
     while(1){
 
@@ -197,7 +209,7 @@ int main(){
         // dbg.printf("%6.2f,%6.2f,%6.2f,%6.2f\n",g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z,\
         // g_lis3.temp);
 
-        HAL_Delay(100);
+        HAL_Delay(10);
 
         
 

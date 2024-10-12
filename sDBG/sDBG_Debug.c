@@ -1,5 +1,9 @@
 #include "sDBG_Debug.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
+
 void Error_Handler(){
     __disable_irq();
     while (1){
@@ -31,8 +35,8 @@ void vApplicationTickHook(){
 }
 
 
-// void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
-//     sHMI_Debug_Printf("WARNING警告:触发栈金丝雀机制! 任务句柄:0x%X,任务名:%s\n",xTask,pcTaskName);
-// }
+void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
+    //sHMI_Debug_Printf("WARNING警告:触发栈金丝雀机制! 任务句柄:0x%X,任务名:%s\n",xTask,pcTaskName);
+}
 
 

@@ -262,7 +262,7 @@ static void init_rst_gpio(){
     gpio.Mode = GPIO_MODE_OUTPUT_PP;
     gpio.Pin = RST_GPIO_PIN;
     gpio.Pull = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpio.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(RST_GPIO,&gpio);
 }
 //设置RST
@@ -358,11 +358,6 @@ int8_t sDRV_GenOLED_Init(){
 
     #ifdef USE_HW_RST
         init_rst_gpio();
-        //reset the device
-        setRST(1);
-        HAL_Delay(1);
-        setRST(0);
-        HAL_Delay(1);
         setRST(1);
     #endif
 

@@ -28,7 +28,12 @@
   },
   "targets": {
     "Debug": {
-      "excludeList": [],
+      "excludeList": [
+        "sMID/FreeRTOS/portable/MemMang/heap_5.c",
+        "sMID/FreeRTOS/portable/MemMang/heap_3.c",
+        "sMID/FreeRTOS/portable/MemMang/heap_2.c",
+        "sMID/FreeRTOS/portable/MemMang/heap_1.c"
+      ],
       "toolchain": "AC6",
       "compileConfig": {
         "cpuType": "Cortex-M4",
@@ -115,7 +120,10 @@
           "sLIB/CMSIS/DSP/Include",
           "sMID/sGenBtnDrv2",
           "sMID/sLib",
-          "sMID/sGraphic2D"
+          "sMID/sGraphic2D",
+          "sMID/FreeRTOS/include",
+          "sMID/FreeRTOS/portable/GCC",
+          "sMID/FreeRTOS"
         ],
         "libList": [],
         "defineList": [
