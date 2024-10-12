@@ -65,5 +65,14 @@
 #define TRACK_CS_GPIO_Port      GPIOD
 #define TRACK_CS_Pin            GPIO_PIN_2
 
+/*IMU CS*/
+#define ICM_CS_Pin GPIO_PIN_0
+#define ICM_CS_GPIO_Port GPIOC
+#define LIS3_CS_Pin GPIO_PIN_1
+#define LIS3_CS_GPIO_Port GPIOC
+
+/*VBAT ADC*/
+#define VBAT_ADC_Pin GPIO_PIN_4
+#define VBAT_ADC_GPIO_Port GPIOA
 
 

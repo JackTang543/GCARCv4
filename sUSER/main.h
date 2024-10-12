@@ -4,6 +4,7 @@
 #include "stm32f4xx_hal.h"
 
 #include "sGCARCv4_hal_msp.h"
+#include "sGCARCv4_PinDefine.h"
 
 #include "arm_math.h"
 #include "math.h"
@@ -37,6 +38,7 @@
 #include "sDRV_PwrLight.h"
 #include "sDRV_MB85RCxx.h"
 #include "sDRV_TrackTube8.h"
+#include "sDRV_INA219.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"
@@ -45,6 +47,7 @@
 #include "sBSP_SPI.h"
 #include "sBSP_TIM.h"
 #include "sBSP_I2C.h"
+#include "sBSP_ADC.h"
 
 
 

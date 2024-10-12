@@ -20,6 +20,8 @@ int main(){
 
     HAL_InitTick(0);
 
+    HAL_Delay(100);
+
     dbg.init(USART1);
     
     uint32_t sys_clk_freq = HAL_RCC_GetSysClockFreq();
@@ -38,34 +40,13 @@ int main(){
     gpio.Speed = GPIO_SPEED_FREQ_LOW;
     gpio.Pin   = GPIO_PIN_13;
     HAL_GPIO_Init(GPIOC,&gpio);
-
-    __GPIOC_CLK_ENABLE();
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    gpio.Pin   = GPIO_PIN_4;
-    HAL_GPIO_Init(GPIOC,&gpio);
-
-    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4,GPIO_PIN_RESET);
     
 
 
     /*SPI2 <-> IMU_SPI*/
     sBSP_SPI_IMU_Init(SPI_BAUDRATEPRESCALER_64);   //11.25MBits/s
 
-    #define ICM_CS_Pin GPIO_PIN_0
-    #define ICM_CS_GPIO_Port GPIOC
-    #define LIS3_CS_Pin GPIO_PIN_1
-    #define LIS3_CS_GPIO_Port GPIOC
-
-    __GPIOA_CLK_ENABLE();
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    gpio.Pin   = GPIO_PIN_8;
-    HAL_GPIO_Init(GPIOA,&gpio);
-
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+    
 
     /*把IMU的2个CS都上拉*/
     __GPIOC_CLK_ENABLE();
@@ -78,32 +59,13 @@ int main(){
     HAL_GPIO_WritePin(GPIOC,ICM_CS_Pin,GPIO_PIN_SET);
     HAL_GPIO_WritePin(GPIOC,LIS3_CS_Pin,GPIO_PIN_SET);
 
-    __GPIOA_CLK_ENABLE();
-    //GPIO_InitTypeDef gpio = {0};
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    gpio.Pin   = GPIO_PIN_0 | GPIO_PIN_1| GPIO_PIN_2| GPIO_PIN_3;
-    HAL_GPIO_Init(GPIOA,&gpio);
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET);
-
-
-    __GPIOC_CLK_ENABLE();
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    gpio.Pin   = GPIO_PIN_12;
-    HAL_GPIO_Init(GPIOC,&gpio);
-
-    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_12,GPIO_PIN_RESET);
-
 
     
     sDRV_PL_Init();
     sDRV_PL_SetBrightness(50);
+
+    sBSP_I2C1_Init(400000);
+    sDRV_INA219_Init();
 
 
 //     sBSP_TIM_Motor_Init();
@@ -181,16 +143,30 @@ int main(){
     sG2D_Printf(10,10,"Hello sGCARCv4");
 
     sG2D_UpdateScreen();
-    
 
+    sBSP_ADC_Init();
+    
+    
     
 
     while(1){
-        sG2D_Printf(10,30,"i = %u",i);
+
+        float a = sDRV_INA219_GetCurrA();
+        float v = sDRV_INA219_GetBusV();
+        float w = sDRV_INA219_GetPwrW();
+
+        sG2D_Printf(10,20,"i = %u",i);
         i++;
+
+        sG2D_Printf(10,30,"%.4fA",a);
+        sG2D_Printf(10,40,"%.4fV",v);
+        sG2D_Printf(10,50,"%.4fW",w);
 
         sG2D_UpdateScreen();
         sG2D_SetAllGRAM(0);
+
+        float vbat = sBSP_ADC_GetBatVolt();
+        dbg.printf("vbat = %.2f\n",vbat);
 
         //sDRV_GMR_Handler();
 
@@ -281,7 +257,11 @@ int main(){
  * OLED 验证完成
  * 
  * 
- * INA219 电池ADC
+ * 241012 PM03:43
+ * 电池ADC 验证完成
+ * 
+ * 
+ * INA219
  * 
  * 
  * topUART I2C2
