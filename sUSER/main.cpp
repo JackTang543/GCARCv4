@@ -128,37 +128,37 @@ int main(){
 
     // sDRV_GMR_Init();
 
-    sBSP_I2C1_Init(400000);
-    sDRV_MB85RCxx_Init();
+    // sBSP_I2C1_Init(400000);
+    // sDRV_MB85RCxx_Init();
     
 
-    uint8_t dat[128];
+    // uint8_t dat[128];
 
-    sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
+    // sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
 
 
-    dbg.printf("Raw:\n");
+    // dbg.printf("Raw:\n");
 
-    for(int i = 0;i < (128/16);i++){
-        for(int j = 0;j < 16;j++){
-        dbg.printf("0x%0X ",dat[i*16+j]);
-        }
-        dbg.println();
-    }
+    // for(int i = 0;i < (128/16);i++){
+    //     for(int j = 0;j < 16;j++){
+    //     dbg.printf("0x%0X ",dat[i*16+j]);
+    //     }
+    //     dbg.println();
+    // }
 
-    dbg.printf("Write:\n");
+    // dbg.printf("Write:\n");
 
-    //sDRV_MB85RCxx_WriteByte(0x50,0xA1);
-    sDRV_MB85RCxx_Format(0xF2);
+    // //sDRV_MB85RCxx_WriteByte(0x50,0xA1);
+    // sDRV_MB85RCxx_Format(0xF2);
 
-    sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
+    // sDRV_MB85RCxx_ReadBytes(0x00,dat,128);
 
-    for(int i = 0;i < (128/16);i++){
-        for(int j = 0;j < 16;j++){
-        dbg.printf("0x%0X ",dat[i*16 + j]);
-        }
-        dbg.println();
-    }
+    // for(int i = 0;i < (128/16);i++){
+    //     for(int j = 0;j < 16;j++){
+    //     dbg.printf("0x%0X ",dat[i*16 + j]);
+    //     }
+    //     dbg.println();
+    // }
 
     // /*初始化传感器*/
     // if(sDRV_ICM_Init() != 0){
@@ -171,15 +171,33 @@ int main(){
     //     while(1);
     // }
 
+
+    // sDRV_TrackTube8_Init();
+    // float path1,path2;
+
+
+    sDRV_GenOLED_Init();
+    int i = 0;
+    sG2D_Printf(10,10,"Hello sGCARCv4");
+
+    sG2D_UpdateScreen();
     
 
     
 
     while(1){
+        sG2D_Printf(10,30,"i = %u",i);
+        i++;
+
+        sG2D_UpdateScreen();
+        sG2D_SetAllGRAM(0);
+
         //sDRV_GMR_Handler();
 
         //dbg.printf("%6.2f,%6.2f\n",sDRV_GMR_GetLeftRPM(),sDRV_GMR_GetRightRPM());
 
+        // sDRV_TrackTube8_GetData(&path1,&path2);
+        // dbg.printf("%.2f\n",path1);
 
         HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
 
@@ -256,12 +274,11 @@ int main(){
  * 241012 AM10:25
  * FeRAM 验证完成
  * 
+ * 241012 PM12:01
+ * Track寻迹管 //! 好像有问题
  * 
- * Track寻迹管
- * 
- * 
- * 
- * OLED
+ * 241012 PM02:08
+ * OLED 验证完成
  * 
  * 
  * INA219 电池ADC

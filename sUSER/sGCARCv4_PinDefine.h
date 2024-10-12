@@ -28,13 +28,42 @@
 #define LIGHT_GPIO_Port     GPIOB
 
 /*I2C*/
-#define BI2C_SCL_Pin GPIO_PIN_8
-#define BI2C_SCL_GPIO_Port GPIOB
-#define BI2C_SDA_Pin GPIO_PIN_9
-#define BI2C_SDA_GPIO_Port GPIOB
-#define EI2C_SCL_Pin GPIO_PIN_10
-#define EI2C_SCL_GPIO_Port GPIOB
-#define EI2C_SDA_Pin GPIO_PIN_11
-#define EI2C_SDA_GPIO_Port GPIOB
+#define BI2C_SCL_Pin        GPIO_PIN_8
+#define BI2C_SCL_GPIO_Port  GPIOB
+#define BI2C_SDA_Pin        GPIO_PIN_9
+#define BI2C_SDA_GPIO_Port  GPIOB
+#define EI2C_SCL_Pin        GPIO_PIN_10
+#define EI2C_SCL_GPIO_Port  GPIOB
+#define EI2C_SDA_Pin        GPIO_PIN_11
+#define EI2C_SDA_GPIO_Port  GPIOB
+
+/*SPI1 -> OLED*/
+#define OLED_SCK_GPIO_Port      GPIOA
+#define OLED_SCK_Pin            GPIO_PIN_5
+#define OLED_DC_GPIO_Port       GPIOA
+#define OLED_DC_Pin             GPIO_PIN_6
+#define OLED_SDA_GPIO_Port      GPIOA
+#define OLED_SDA_Pin            GPIO_PIN_7
+#define OLED_CS_GPIO_Port       GPIOA
+#define OLED_CS_Pin             GPIO_PIN_15
+
+/*SPI2 -> IMU*/
+#define IMU_SCK_GPIO_Port       GPIOB
+#define IMU_SCK_Pin             GPIO_PIN_13
+#define IMU_MISO_GPIO_Port      GPIOC
+#define IMU_MISO_Pin            GPIO_PIN_2
+#define IMU_MOSI_GPIO_Port      GPIOC
+#define IMU_MOSI_Pin            GPIO_PIN_3
+
+/*SPI3 -> TRACK*/
+#define TRACK_SCK_GPIO_Port     GPIOC
+#define TRACK_SCK_Pin           GPIO_PIN_10
+#define TRACK_MISO_GPIO_Port    GPIOC
+#define TRACK_MISO_Pin          GPIO_PIN_11
+#define TRACK_MOSI_GPIO_Port    GPIOC
+#define TRACK_MOSI_Pin          GPIO_PIN_12
+#define TRACK_CS_GPIO_Port      GPIOD
+#define TRACK_CS_Pin            GPIO_PIN_2
+
 
 

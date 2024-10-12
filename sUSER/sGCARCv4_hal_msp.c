@@ -146,6 +146,65 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c){
     }
 }
 
+void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle){
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    if(spiHandle->Instance==SPI1){
+        __HAL_RCC_SPI1_CLK_ENABLE();
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+        /**SPI1 GPIO Configuration
+        PA5     ------> SPI1_SCK
+        PA7     ------> SPI1_MOSI
+        PA15     ------> SPI1_NSS
+        */
+        GPIO_InitStruct.Pin = OLED_SCK_Pin|OLED_SDA_Pin|OLED_CS_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        }
+    else if(spiHandle->Instance==SPI2){
+        __HAL_RCC_SPI2_CLK_ENABLE();
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**SPI2 GPIO Configuration
+        PC2     ------> SPI2_MISO
+        PC3     ------> SPI2_MOSI
+        PB13     ------> SPI2_SCK
+        */
+        GPIO_InitStruct.Pin = IMU_MISO_Pin|IMU_MOSI_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+        GPIO_InitStruct.Pin = IMU_SCK_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+        HAL_GPIO_Init(IMU_SCK_GPIO_Port, &GPIO_InitStruct);
+    }
+    else if(spiHandle->Instance==SPI3){
+        __HAL_RCC_SPI3_CLK_ENABLE();
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        /**SPI3 GPIO Configuration
+        PC10     ------> SPI3_SCK
+        PC11     ------> SPI3_MISO
+        PC12     ------> SPI3_MOSI
+        */
+        GPIO_InitStruct.Pin = TRACK_SCK_Pin|TRACK_MISO_Pin|TRACK_MOSI_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    }
+}
+
+
+
 
 
 

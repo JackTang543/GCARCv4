@@ -114,7 +114,8 @@
           "sLIB/CMSIS/Core/Include",
           "sLIB/CMSIS/DSP/Include",
           "sMID/sGenBtnDrv2",
-          "sMID/sLib"
+          "sMID/sLib",
+          "sMID/sGraphic2D"
         ],
         "libList": [],
         "defineList": [

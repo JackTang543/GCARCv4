@@ -18,6 +18,8 @@
 #include "sAPP_PMDC.h"
 
 /*MID*/
+#include "sGraphic2D.h"
+#include "sDRV_GenOLED.h"
 
 
 /*DBG*/
@@ -34,6 +36,7 @@
 #include "sDRV_GMR.h"
 #include "sDRV_PwrLight.h"
 #include "sDRV_MB85RCxx.h"
+#include "sDRV_TrackTube8.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"
