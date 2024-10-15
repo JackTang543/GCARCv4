@@ -32,7 +32,9 @@
         "sMID/FreeRTOS/portable/MemMang/heap_5.c",
         "sMID/FreeRTOS/portable/MemMang/heap_3.c",
         "sMID/FreeRTOS/portable/MemMang/heap_2.c",
-        "sMID/FreeRTOS/portable/MemMang/heap_1.c"
+        "sMID/FreeRTOS/portable/MemMang/heap_1.c",
+        "sMID/cm_backtrace/fault_handler/gcc",
+        "sMID/cm_backtrace/fault_handler/iar"
       ],
       "toolchain": "AC6",
       "compileConfig": {
@@ -123,7 +125,8 @@
           "sMID/sGraphic2D",
           "sMID/FreeRTOS/include",
           "sMID/FreeRTOS/portable/GCC",
-          "sMID/FreeRTOS"
+          "sMID/FreeRTOS",
+          "sMID/cm_backtrace"
         ],
         "libList": [],
         "defineList": [

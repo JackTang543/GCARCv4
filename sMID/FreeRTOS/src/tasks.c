@@ -274,6 +274,11 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
         StackType_t * pxEndOfStack; /**< Points to the highest valid address for the stack. */
     #endif
 
+    //! 我修改的
+    #if !( portSTACK_GROWTH > 0 )
+        UBaseType_t     uxSizeOfStack;      /*< Support For CmBacktrace >*/
+    #endif
+
     #if ( portCRITICAL_NESTING_IN_TCB == 1 )
         UBaseType_t uxCriticalNesting; /**< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
     #endif
@@ -863,6 +868,8 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
 
         /* Check the alignment of the calculated top of stack is correct. */
         configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+        //! 我修改的
+        pxNewTCB->uxSizeOfStack = ulStackDepth;   /*< Support For CmBacktrace >*/
 
         #if ( configRECORD_STACK_HIGH_ADDRESS == 1 )
         {
@@ -5503,3 +5510,29 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
     #endif
 
 #endif /* if ( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 ) */
+
+/*-----------------------------------------------------------*/
+/*< Support For CmBacktrace >*/
+uint32_t * vTaskStackAddr()
+{
+    return pxCurrentTCB->pxStack;
+}
+
+uint32_t vTaskStackSize()
+{
+    #if ( portSTACK_GROWTH > 0 )
+    
+    return (pxNewTCB->pxEndOfStack - pxNewTCB->pxStack + 1);
+    
+    #else /* ( portSTACK_GROWTH > 0 )*/
+    
+    return pxCurrentTCB->uxSizeOfStack;
+    #endif /* ( portSTACK_GROWTH > 0 )*/
+}
+
+char * vTaskName()
+{
+    return pxCurrentTCB->pcTaskName;
+}
+/*-----------------------------------------------------------*/
+

@@ -15,6 +15,7 @@
 #include "task.h"
 
 
+
 /*APP*/
 #include "sAPP_Btns.h"
 #include "sAPP_PMDC.h"
@@ -22,6 +23,7 @@
 /*MID*/
 #include "sGraphic2D.h"
 #include "sDRV_GenOLED.h"
+#include "cm_backtrace.h"
 
 
 /*DBG*/
@@ -53,4 +55,5 @@
 
 
 
+extern UART_HandleTypeDef *g_uart1;
 extern sDBG_UART dbg;

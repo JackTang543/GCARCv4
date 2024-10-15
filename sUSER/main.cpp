@@ -11,14 +11,18 @@
 
 
 
-
+UART_HandleTypeDef *g_uart1;
 
 
 sDBG_UART dbg;
 
 void uart(void* param){
     for(;;){
-        dbg.print("Task uart\n");
+        //dbg.print("Task uart\n");
+        sDBG_Debug_Printf("Task uart c\n");
+
+        
+
         vTaskDelay(100);
     }
 }
@@ -33,6 +37,9 @@ int main(){
     HAL_Delay(100);
 
     dbg.init(USART1);
+
+    g_uart1 = &dbg.uart_handle;
+
     
     uint32_t sys_clk_freq = HAL_RCC_GetSysClockFreq();
 
@@ -40,6 +47,9 @@ int main(){
 
     dbg.printf("STM32 System Clock Freq: %u MHz\n", sys_clk_freq / 1000000);
     dbg.printf("Hello,STM32F405RGT6    BySightseer.\n");
+
+    //启用div0异常
+    SCB->CCR |= SCB_CCR_DIV_0_TRP_Msk;
     
 
 
@@ -157,6 +167,13 @@ int main(){
     sBSP_ADC_Init();
 
     xTaskCreate(uart        , "OLEDUp"      ,  256, NULL, 1, NULL);
+
+    #define APPNAME                        "GCARCv4"
+    #define HARDWARE_VERSION               "V4"
+    #define SOFTWARE_VERSION               "V1.0"
+
+    dbg.printf("cm_backtrace初始化完成\n");
+    cm_backtrace_init(APPNAME, HARDWARE_VERSION, SOFTWARE_VERSION);
     
     dbg.printf("FreeRTOS启动任务调度\n");
     vTaskStartScheduler();
