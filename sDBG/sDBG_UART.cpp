@@ -3,6 +3,8 @@
 #include "sDBG_Debug.h"
 
 
+sDBG_UART dbg;
+
 uint32_t sDBG_UART::blocking_max_time = 50;
 
 

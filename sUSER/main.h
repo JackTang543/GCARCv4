@@ -17,8 +17,11 @@
 
 
 /*APP*/
+#include "sAPP_IMU.hpp"
+#include "sAPP_Car.hpp"
 #include "sAPP_Btns.h"
-#include "sAPP_PMDC.h"
+#include "sAPP_Motor.hpp"
+
 
 /*MID*/
 #include "sGraphic2D.h"
@@ -53,7 +56,8 @@
 #include "sBSP_ADC.h"
 
 
-
+#define APPNAME                        "GCARCv4"
+#define HARDWARE_VERSION               "V4"
+#define SOFTWARE_VERSION               "V1.0"
 
 extern UART_HandleTypeDef *g_uart1;
-extern sDBG_UART dbg;

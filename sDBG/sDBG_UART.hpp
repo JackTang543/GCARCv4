@@ -54,7 +54,7 @@ private:
     static uint32_t blocking_max_time;
 
     //used for printf function
-    char fmt_buf[128];
+    char fmt_buf[256];
 
 
 
@@ -65,6 +65,8 @@ private:
 };
 
 
+
+extern sDBG_UART dbg;
 
 
 

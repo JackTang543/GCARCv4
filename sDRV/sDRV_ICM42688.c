@@ -424,7 +424,7 @@ int sDRV_ICM_Init(){
     HAL_Delay(50);
     
 
-    //初始化配置
+    //初始化配置:实时性+++
     sDRV_ICM_Conf_t icm_conf = {0};
     icm_conf.gyro_fs           = SDRV_ICM_GYROFS_500DPS;
     icm_conf.gyro_odr          = SDRV_ICM_GYROODR_1KHZ;

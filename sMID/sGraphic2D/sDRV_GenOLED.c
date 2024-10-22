@@ -331,7 +331,7 @@ static inline void write_data(uint8_t data){
 }
 
 /**
-  * @brief  初始化SH1106
+  * @brief  初始化
   *
   * @param  无
   *
@@ -359,6 +359,11 @@ int8_t sDRV_GenOLED_Init(){
     #ifdef USE_HW_RST
         init_rst_gpio();
         setRST(1);
+        HAL_Delay(10);
+        setRST(0);
+        HAL_Delay(10);
+        setRST(1);
+        HAL_Delay(100);
     #endif
 
 
