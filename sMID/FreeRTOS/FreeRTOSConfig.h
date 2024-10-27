@@ -57,7 +57,7 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES			( 5 )
+#define configMAX_PRIORITIES			( 6 )	//! 可用范围0~5
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
@@ -72,6 +72,11 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	1
+
+//!注意,使用了cm_backtrace就不能使用静态分配,因为修改了FreeRTOS源码(TCB部分),导致静态创建任务时断言失败:
+//!WARNING警告:断言失败! 文件名:./sMID/FreeRTOS/src/tasks.c,行:593 禁用IRQ,死循环...
+#define configSUPPORT_STATIC_ALLOCATION  0		//启动静态分配
+#define configSUPPORT_DYNAMIC_ALLOCATION 1		//启动动态分配
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
@@ -120,7 +125,10 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 	
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
+//! #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
+//我的在调试环境中的带串口debug版本(借用HAL库用的断言失败处理)
+#define configASSERT( x ) if( ( x ) == 0 ) {assert_failed((uint8_t *)__FILE__,__LINE__); taskDISABLE_INTERRUPTS(); for( ;; ); }	
+
 	
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */

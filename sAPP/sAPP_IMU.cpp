@@ -3,7 +3,7 @@
 
 sAPP_IMU imu;
 
-#include "sGCARCv4_PinDefine.h"
+#include "sGCARCv4_Def.h"
 #include "sBSP_SPI.h"
 
 

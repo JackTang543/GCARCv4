@@ -37,7 +37,7 @@ static bool get_lv(uint8_t btn_id){
     return false;
 }
 
-extern sDBG_UART dbg;
+#include "main.h"
 
 static void trig(uint8_t btn_id,ev_flag_t btn_ev){
     if(btn_id == SGBD_KEY_UP_ID){
@@ -45,7 +45,7 @@ static void trig(uint8_t btn_id,ev_flag_t btn_ev){
             
         }
         else if(btn_ev == ev_pres){
-
+            g_ctrl.blc_en = !g_ctrl.blc_en;
         }
     }
 
@@ -53,27 +53,27 @@ static void trig(uint8_t btn_id,ev_flag_t btn_ev){
     //打印按键id的事件
     if(btn_ev == ev_pres){
         //sHMI_BUZZER_StartSinglePulse();
-        dbg.printf("KEY%d:按键按下\n",btn_id + 1);
+        //dbg.printf("KEY%d:按键按下\n",btn_id + 1);
     }
     else if(btn_ev == ev_rlsd){
-        dbg.printf("KEY%d:按键松手\n",btn_id + 1);
+        //dbg.printf("KEY%d:按键松手\n",btn_id + 1);
     }
     else if(btn_ev == ev_dp){
         //sHMI_BUZZER_StartSinglePulse();
-        dbg.printf("KEY%d:双击按下\n",btn_id + 1);
+        //dbg.printf("KEY%d:双击按下\n",btn_id + 1);
     }
     else if(btn_ev == ev_dp_rlsd){
-        dbg.printf("KEY%d:双击松手\n",btn_id + 1);
+        //dbg.printf("KEY%d:双击松手\n",btn_id + 1);
     }
     else if(btn_ev == ev_lp){
         //sHMI_BUZZER_StartSinglePulse();
-        dbg.printf("KEY%d:长按触发\n",btn_id + 1);
+        //dbg.printf("KEY%d:长按触发\n",btn_id + 1);
     }
     else if(btn_ev == ev_lp_rlsd){
-        dbg.printf("KEY%d:长按松手\n",btn_id + 1);
+        //dbg.printf("KEY%d:长按松手\n",btn_id + 1);
     }
     else if(btn_ev == ev_lp_loop){
-        dbg.printf("KEY%d:长按循环触发\n",btn_id + 1);
+        //dbg.printf("KEY%d:长按循环触发\n",btn_id + 1);
     }
     //sHMI_Debug_Printf("btn_id:%d,btn_ev:%d\n",btn_id,btn_ev);
 }

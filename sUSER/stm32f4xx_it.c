@@ -1,7 +1,11 @@
 
 #include "stm32f4xx_it.h"
 
-//extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef uart1;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
+
+extern UART_HandleTypeDef uart6;
 
 extern TIM_HandleTypeDef htim6;
 
@@ -49,7 +53,19 @@ void DebugMon_Handler(void){
 
 
 void USART1_IRQHandler(void){
-    //HAL_UART_IRQHandler(&huart1);
+    HAL_UART_IRQHandler(&uart1);
+}
+
+void USART6_IRQHandler(void){
+    HAL_UART_IRQHandler(&uart6);
+}
+
+void DMA2_Stream2_IRQHandler(void){
+    HAL_DMA_IRQHandler(&hdma_usart1_rx);
+}
+
+void DMA2_Stream7_IRQHandler(void){
+    HAL_DMA_IRQHandler(&hdma_usart1_tx);
 }
 
 

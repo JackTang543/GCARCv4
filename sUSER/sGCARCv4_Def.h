@@ -3,6 +3,22 @@
 /*This file is used to define the pin assignments for the sGCARCv4*/
 
 
+
+/*指定变量或函数存放的区域,注意看分散加载文件*/
+//attribute:Normal memory
+#define IRAM1_ATTR     __attribute__((section("IRAM1")))
+//attribute:Core coupled memory
+#define IRAM2_ATTR     __attribute__((section("IRAM2")))
+//attribute:flash memory
+#define IROM_ATTR      __attribute__((section("IROM")))
+//attribute:手动设置对齐
+#define ALIGN_ATTR(__BYTES) __attribute__((aligned(__BYTES)))
+
+
+/*User LED*/
+#define USER_LED_Pin        GPIO_PIN_13
+#define USER_LED_GPIO_Port  GPIOC
+
 /*Motor PWM*/
 #define ML_PWM1_Pin         GPIO_PIN_0
 #define ML_PWM1_GPIO_Port   GPIOA
@@ -75,4 +91,15 @@
 #define VBAT_ADC_Pin GPIO_PIN_4
 #define VBAT_ADC_GPIO_Port GPIOA
 
+/*UART1 Debug*/
+#define DEBUG_TX_Pin GPIO_PIN_9
+#define DEBUG_TX_GPIO_Port GPIOA
+#define DEBUG_RX_Pin GPIO_PIN_10
+#define DEBUG_RX_GPIO_Port GPIOA
+
+/*UART6 Top*/
+#define TOP_TX_Pin GPIO_PIN_6
+#define TOP_TX_GPIO_Port GPIOC
+#define TOP_RX_Pin GPIO_PIN_7
+#define TOP_RX_GPIO_Port GPIOC
 

@@ -15,6 +15,7 @@ public:
 
 
     int initSys();
+    int initBoard();
     
 
 

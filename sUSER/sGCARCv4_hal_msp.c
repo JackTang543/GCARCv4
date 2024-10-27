@@ -1,12 +1,11 @@
 #include "sGCARCv4_hal_msp.h"
+#include "sDBG_Debug.h"
+#include "sGCARCv4_Def.h"
 
-#include "sGCARCv4_PinDefine.h"
 
-
-//这些是串口的GPIO口
-#define UART1_GPIO       GPIOA
-#define UART1_TX_PIN     GPIO_PIN_9
-#define UART1_RX_PIN     GPIO_PIN_10
+extern UART_HandleTypeDef uart1;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 
 
 void HAL_MspInit(void)
@@ -36,14 +35,54 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart){
 
         GPIO_InitTypeDef gpio;
         gpio.Mode      = GPIO_MODE_AF_PP;
-        gpio.Pin       = UART1_TX_PIN | UART1_RX_PIN;
+        gpio.Pin       = DEBUG_TX_Pin | DEBUG_RX_Pin;
         gpio.Pull      = GPIO_NOPULL;
         gpio.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
         gpio.Alternate = GPIO_AF7_USART1;
-        HAL_GPIO_Init(UART1_GPIO,&gpio);
+        HAL_GPIO_Init(DEBUG_TX_GPIO_Port,&gpio);
         
-        // HAL_NVIC_SetPriority(USART1_IRQn,0,0);
-        // HAL_NVIC_EnableIRQ(USART1_IRQn);
+        HAL_NVIC_SetPriority(USART1_IRQn,10,0);
+        HAL_NVIC_EnableIRQ(USART1_IRQn);
+
+        /*RX*/
+        __HAL_RCC_DMA2_CLK_ENABLE();
+        hdma_usart1_rx.Instance                 = DMA2_Stream2;
+        hdma_usart1_rx.Init.Channel             = DMA_CHANNEL_4;
+        hdma_usart1_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+        hdma_usart1_rx.Init.PeriphInc           = DMA_PINC_DISABLE;
+        hdma_usart1_rx.Init.MemInc              = DMA_MINC_ENABLE;
+        hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hdma_usart1_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+        hdma_usart1_rx.Init.Mode                = DMA_NORMAL;
+        hdma_usart1_rx.Init.Priority            = DMA_PRIORITY_LOW;
+        hdma_usart1_rx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+        
+        if(HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK){
+            Error_Handler();
+        }
+        
+        __HAL_LINKDMA(huart,hdmarx,hdma_usart1_rx);
+
+
+
+        HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 10, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+        HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 10, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+
+    }
+    else if(huart->Instance == USART6){
+        __GPIOC_CLK_ENABLE();
+        __USART6_CLK_ENABLE();
+        GPIO_InitTypeDef gpio;
+        gpio.Pin = TOP_TX_Pin|TOP_RX_Pin;
+        gpio.Mode = GPIO_MODE_AF_PP;
+        gpio.Pull = GPIO_NOPULL;
+        gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        gpio.Alternate = GPIO_AF8_USART6;
+        HAL_GPIO_Init(GPIOC, &gpio);
+        HAL_NVIC_SetPriority(USART6_IRQn,10,0);
+        HAL_NVIC_EnableIRQ(USART6_IRQn);
     }
 }
 

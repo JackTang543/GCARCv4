@@ -359,11 +359,11 @@ int8_t sDRV_GenOLED_Init(){
     #ifdef USE_HW_RST
         init_rst_gpio();
         setRST(1);
-        HAL_Delay(10);
+        HAL_Delay(1);
         setRST(0);
-        HAL_Delay(10);
+        HAL_Delay(1);
         setRST(1);
-        HAL_Delay(100);
+        HAL_Delay(50);
     #endif
 
 

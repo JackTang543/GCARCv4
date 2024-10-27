@@ -4,7 +4,7 @@
 #include "stm32f4xx_hal.h"
 
 #include "sGCARCv4_hal_msp.h"
-#include "sGCARCv4_PinDefine.h"
+#include "sGCARCv4_Def.h"
 
 #include "arm_math.h"
 #include "math.h"
@@ -21,7 +21,10 @@
 #include "sAPP_Car.hpp"
 #include "sAPP_Btns.h"
 #include "sAPP_Motor.hpp"
-
+#include "sAPP_BlcCtrl.hpp"
+#include "sAPP_Tasks.hpp"
+#include "sAPP_AHRS.hpp"
+#include "sAPP_BlcCtrl.hpp"
 
 /*MID*/
 #include "sGraphic2D.h"
@@ -45,6 +48,9 @@
 #include "sDRV_MB85RCxx.h"
 #include "sDRV_TrackTube8.h"
 #include "sDRV_INA219.h"
+#include "sDRV_LED.hpp"
+#include "sDRV_PS2.h"
+#include "PS2.h"
 
 /*BSP*/
 #include "sBSP_DWT.h"
@@ -54,10 +60,14 @@
 #include "sBSP_TIM.h"
 #include "sBSP_I2C.h"
 #include "sBSP_ADC.h"
+#include "sBSP_UART.h"
+#include "sBSP_DMA.h"
 
 
 #define APPNAME                        "GCARCv4"
 #define HARDWARE_VERSION               "V4"
 #define SOFTWARE_VERSION               "V1.0"
 
-extern UART_HandleTypeDef *g_uart1;
+
+
+

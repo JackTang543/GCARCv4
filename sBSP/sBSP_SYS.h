@@ -8,9 +8,6 @@ extern "C" {
 
 
 
-void sBSP_SYS_Init();
-
-
 
 
 #ifdef __cplusplus

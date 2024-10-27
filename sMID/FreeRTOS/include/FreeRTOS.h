@@ -1273,8 +1273,9 @@ typedef struct xSTATIC_TCB
     UBaseType_t uxDummy5;
     void * pxDummy6;
     uint8_t ucDummy7[ configMAX_TASK_NAME_LEN ];
+    //!我修改的,用于cm_backtrace,因为tasks.c 593行断言失败
     #if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
-        void * pxDummy8;
+        //void * pxDummy8;
     #endif
     #if ( portCRITICAL_NESTING_IN_TCB == 1 )
         UBaseType_t uxDummy9;

@@ -34,6 +34,9 @@ typedef struct{
 }sLib_IncPID_t;
 
 
+
+/*适用于SISO系统的一般式PID控制器*/
+
 /*位置式PID*/
 void  sLib_PosPIDInit     (sLib_PosPID_t* pid,float out_min,float out_max,float int_min,float int_max);
 void  sLib_PosPIDSetK     (sLib_PosPID_t* pid,float Kp,float Ki,float Kd);

@@ -17,9 +17,11 @@ public:
 
     void setLM(float percent);
     float getLRPM();
+    void setLBrake(bool is_short = false);
     
     void setRM(float percent);
     float getRRPM();
+    void setRBrake(bool is_short = false);
 
 
     void update();

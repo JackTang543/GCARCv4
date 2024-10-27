@@ -2,7 +2,7 @@
 
 #include "sDBG_Debug.h"
 
-#include "sGCARCv4_PinDefine.h"
+#include "sGCARCv4_Def.h"
 
 //sBSP_SPI.c 20241009 v1
 //used for sGCARCv4
@@ -117,7 +117,7 @@ void sBSP_SPI_TRACK_Init(uint32_t SPI_BAUDRATE){
     TRACK_SPI_HANDLE.Init.Direction        = SPI_DIRECTION_2LINES;
     TRACK_SPI_HANDLE.Init.DataSize         = SPI_DATASIZE_8BIT;
     TRACK_SPI_HANDLE.Init.CLKPolarity      = SPI_POLARITY_LOW;
-    TRACK_SPI_HANDLE.Init.CLKPhase         = SPI_PHASE_1EDGE;
+    TRACK_SPI_HANDLE.Init.CLKPhase         = SPI_PHASE_2EDGE;
     TRACK_SPI_HANDLE.Init.NSS              = SPI_NSS_SOFT;
     TRACK_SPI_HANDLE.Init.BaudRatePrescaler= SPI_BAUDRATE;
     TRACK_SPI_HANDLE.Init.FirstBit         = SPI_FIRSTBIT_MSB;
@@ -131,25 +131,25 @@ void sBSP_SPI_TRACK_Init(uint32_t SPI_BAUDRATE){
 }
 
 void sBSP_SPI_TRACK_SetEN(uint8_t en){
-    en ? __HAL_SPI_ENABLE(&IMU_SPI_HANDLE) : __HAL_SPI_DISABLE(&IMU_SPI_HANDLE);
+    en ? __HAL_SPI_ENABLE(&TRACK_SPI_HANDLE) : __HAL_SPI_DISABLE(&TRACK_SPI_HANDLE);
 }
 
 void sBSP_SPI_TRACK_SendByte(uint8_t byte){
-    HAL_SPI_Transmit(&IMU_SPI_HANDLE,&byte,1,100);
+    HAL_SPI_Transmit(&TRACK_SPI_HANDLE,&byte,1,100);
 }
 
 uint8_t sBSP_SPI_TRACK_RecvByte(){
     uint8_t send_byte = 0;
-    HAL_SPI_Receive (&IMU_SPI_HANDLE,&send_byte,1,100);
+    HAL_SPI_Receive (&TRACK_SPI_HANDLE,&send_byte,1,100);
     return send_byte;
 }
 
 void sBSP_SPI_TRACK_SendBytes(uint8_t *pData,uint16_t Size){
-    HAL_SPI_Transmit(&IMU_SPI_HANDLE,pData,Size,1000);
+    HAL_SPI_Transmit(&TRACK_SPI_HANDLE,pData,Size,1000);
 }
 
 void sBSP_SPI_TRACK_RecvBytes(uint8_t *pData,uint16_t Size){
-    HAL_SPI_Receive(&IMU_SPI_HANDLE,pData,Size,1000);
+    HAL_SPI_Receive(&TRACK_SPI_HANDLE,pData,Size,1000);
 }
 
 

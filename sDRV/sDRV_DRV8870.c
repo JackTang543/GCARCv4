@@ -33,7 +33,7 @@ static inline void portSetRightP_PWM(float duty){
 }
 
 static inline void portSetRightN_PWM(float duty){
-    sBSP_TIM_Motor_R1SetDuty(duty);
+    sBSP_TIM_Motor_R2SetDuty(duty);
 }
 
 
@@ -90,13 +90,14 @@ void sDRV_DRV8870_SetRightBrake(bool is_short){
 //设置左轮PWM输出占空比(百分比)
 void sDRV_DRV8870_SetLeftPct(float percent){
     if(percent >= 0.0f){
+        //! 注意方向 N P
         portSetLeftP_PWM(0);
         percent = fmap(percent, 0.0f, 100.0f,MOTORL_DEADZONE,100.0f);
         portSetLeftN_PWM(percent);
     }else if(percent <= 0.0f){
         portSetLeftN_PWM(0);
         percent = -percent;
-        percent = fmap(percent, 0.0f,100.0f,MOTORL_DEADZONE,100.0f);
+        percent = fmap(percent, 0.0f, 100.0f,MOTORL_DEADZONE,100.0f);
         portSetLeftP_PWM(percent);
     }
 }
@@ -104,13 +105,14 @@ void sDRV_DRV8870_SetLeftPct(float percent){
 //设置右轮PWM输出占空比(百分比)
 void sDRV_DRV8870_SetRightPct(float percent){
     if(percent >= 0.0f){
+        //! 注意方向 N P
         portSetRightN_PWM(0);
         percent = fmap(percent, 0.0f, 100.0f,MOTORR_DEADZONE,100.0f);
         portSetRightP_PWM(percent);
     }else if(percent <= 0.0f){
         portSetRightP_PWM(0);
         percent = -percent;
-        percent = fmap(percent, 0.0f,100.0f,MOTORR_DEADZONE,100.0f);
+        percent = fmap(percent, 0.0f, 100.0f,MOTORR_DEADZONE,100.0f);
         portSetRightN_PWM(percent);
     }
 }

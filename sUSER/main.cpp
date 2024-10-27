@@ -10,8 +10,37 @@
 //AC6 C++14
 
 
+/**
+ * 完成TOP UART串口驱动 DMA收发
+ * 完成PS2驱动
+ * 完成sBD
+ * 完成sGraphic2D v2 脏区块刷新 简单非线性动画
+ * 
+ * 电池电量报警
+ * 
+ * Matlab 磁力计校准算法 自动控制 联调 
+ * 
+ * FeRAM应用 人
+ * 
+ * 
+ */
 
-UART_HandleTypeDef *g_uart1;
+
+
+#include <stdio.h>
+
+void uart_recied(char* pReciData,uint16_t length){
+
+    if(sscanf(pReciData, "SPD:%f,MOVE:%f,HEAD:%f",\
+        &g_ctrl.tar_spd,&g_ctrl.tar_move,&g_ctrl.tar_head) == 3){
+        sBSP_UART_Top_Printf("SETTED OK\n");
+    }
+
+    //sBSP_UART_Top_Printf("TOP:%s\n",pReciData);
+
+    sBSP_UART_Top_RecvBegin(uart_recied);
+}
+
 
 
 void* operator new(std::size_t size) {
@@ -30,107 +59,109 @@ void operator delete[](void* ptr) noexcept {
     vPortFree(ptr);  // For array deallocation
 }
 
+uint8_t IRAM1_ATTR my_buf[8192];
 
 
-
-
+// 遍历内存，检查是否所有字节都为指定值
+void check_memory(const void *mem, size_t size, uint8_t target_value) {
+    const uint8_t *ptr = (const uint8_t *)mem;  // 将内存转换为字节指针
+    for (size_t i = 0; i < size; ++i) {
+        if (ptr[i] != target_value) {
+            sBSP_UART_Debug_Printf("在索引 %zu 处发现不同的值: 0x%08X\n", i, ptr[i]);
+            return;
+        }
+    }
+    sBSP_UART_Debug_Printf("内存中的所有字节都为 0x%08X\n", target_value);
+}
 
 int main(){
     car.initSys();
-    
+    car.initBoard();
 
-    dbg.printf("STM32 System Clock Freq: %u MHz\n", car.coreClk / 1000000);
-    dbg.println("Hello,STM32F405RGT6    BySightseer.");
+    //sBSP_UART_Debug_RecvBegin(uart_recied);
+    sBSP_UART_Top_RecvBegin(uart_recied);
 
-
-
-    dbg.println("sGCARCv4初始化完成");
-
-    HAL_Delay(100);
-
-    sBSP_DWT_Init(car.coreClk);
+    sBSP_UART_Debug_Printf("STM32 System Clock Freq: %u MHz\n", car.coreClk / 1000000);
+    sBSP_UART_Debug_Printf("Hello,STM32F405RGT6    BySightseer.\n");
+    sBSP_UART_Debug_Printf("sGCARCv4初始化完成\n");
 
 
-    __GPIOC_CLK_ENABLE();
-    GPIO_InitTypeDef gpio = {0};
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    gpio.Pin   = GPIO_PIN_13;
-    HAL_GPIO_Init(GPIOC,&gpio);
-    
-
-    //初始化IMU
-    if(imu.init() != 0){
-        dbg.println("IMU 初始化失败");
-        Error_Handler();
-    }
-
-    
-    sDRV_PL_Init();
-    sDRV_PL_SetBrightness(50);
-
-
-    sDRV_GenOLED_Init();
-    int i = 0;
     sG2D_Printf(10,10,"Hello sGCARCv4");
 
     sG2D_UpdateScreen();
 
-    sBSP_ADC_Init();
+    sAPP_BlcCtrl_Init();
 
-    //dbg.printf("FreeRTOS启动任务调度\n");
-    //vTaskStartScheduler();
-
-
-
-    #define NUM 1000
-    float gyro_x_accu = 0.0f;
-    float gyro_y_accu = 0.0f;
-    float gyro_z_accu = 0.0f;
-    float acc_x_accu = 0.0f;
-    float acc_y_accu = 0.0f;
-    float acc_z_accu = 0.0f;
-    for(uint32_t i = 0;i < NUM;i++){
-        sDRV_ICM_GetData();
-        gyro_x_accu += g_icm.gyro_x;
-        gyro_y_accu += g_icm.gyro_y;
-        gyro_z_accu += g_icm.gyro_z;
-        acc_x_accu += g_icm.acc_x;
-        acc_y_accu += g_icm.acc_y;
-        acc_z_accu += g_icm.acc_z;
-        HAL_Delay(1);
-    }
-
-    float gyro_x_bias = gyro_x_accu / 1000.0f;
-    float gyro_y_bias = gyro_y_accu / 1000.0f;
-    float gyro_z_bias = gyro_z_accu / 1000.0f;
-
-    float acc_x_bias = acc_x_accu / 1000.0f;
-    float acc_y_bias = acc_y_accu / 1000.0f;
-    float acc_z_bias = acc_z_accu / 1000.0f - 9.81f;
+    ahrs.init();
+    //ahrs.calcBias();
 
 
-    
+    __GPIOA_CLK_ENABLE();
+    __GPIOB_CLK_ENABLE();
+    __GPIOC_CLK_ENABLE();
+    __GPIOD_CLK_ENABLE();
+    GPIO_InitTypeDef gpio = {0};
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    gpio.Pin   = TRACK_SCK_Pin|TRACK_MOSI_Pin;
+    HAL_GPIO_Init(GPIOC,&gpio);
 
-    //todo 完成ADC OLED库 动画库 
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    gpio.Pin   = TRACK_CS_Pin;
+    HAL_GPIO_Init(GPIOD,&gpio);
+
+    gpio.Mode  = GPIO_MODE_INPUT;
+    gpio.Pull  = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    gpio.Pin   = TRACK_MISO_Pin;
+    HAL_GPIO_Init(TRACK_MISO_GPIO_Port,&gpio);
+
+    HAL_GPIO_WritePin(TRACK_CS_GPIO_Port,TRACK_CS_Pin,GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC,TRACK_SCK_Pin,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC,TRACK_MOSI_Pin,GPIO_PIN_SET);
+
+
+    PS2_SetInit();
+
+    // sBSP_DMA_32MemSet_Init();
+    // HAL_Delay(1);
+
+    // #define SET_VAL 0x52
+    // #define SET_NUM 8192
+
+    // uint8_t* ptr = &my_buf[0];
+    // sBSP_UART_Debug_Printf("0x%X\n",ptr);
+
+    // sBSP_DWT_MeasureStart();
+    // //NUM=8192 0x12345678 219us
+    // //NUM=8192 0x52 256us
+    // sBSP_DMA_32MemSet(SET_VAL,(uint32_t*)my_buf,SET_NUM);
+    // sBSP_DWT_MeasureEnd();
+
+    // check_memory(my_buf,SET_NUM,SET_VAL);
+
+    // sBSP_UART_Debug_Printf("%uus\n",sBSP_DWT_GetMeasure_us());
+
+
+
+    // sDRV_PS2_Init();
+
+    // motor.setLM(-30);
+    // motor.setRM(-30);
+
+
+    // sAPP_Tasks_CreateAll();
+    // sBSP_UART_Debug_Printf("FreeRTOS启动任务调度\n");
+    // vTaskStartScheduler();    
 
     while(1){
+        //sBSP_UART_Top_Printf("Hello,CC2530!\n");
+        //sBSP_UART_Debug_Printf("Hello,STM32!\n");
 
-        HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
-
-
-        sDRV_ICM_GetData();
-        sDRV_LIS3_GetData();
-
-        g_icm.gyro_x -= gyro_x_bias;
-        g_icm.gyro_y -= gyro_y_bias;
-        g_icm.gyro_z -= gyro_z_bias;
-
-        g_icm.acc_x -= acc_x_bias;
-        g_icm.acc_y -= acc_y_bias;
-        g_icm.acc_z -= acc_z_bias;
-
+        bReadPS2Data();
 
 
         // dbg.printf("%u,%.4f,%.4f,%.4f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",HAL_GetTick(),g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
@@ -139,11 +170,11 @@ int main(){
         // dbg.printf("%6u,%8.4f,%8.4f,%8.4f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f,%6.2f\n",HAL_GetTick(),g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
         // g_icm.gyro_x,g_icm.gyro_y,g_icm.gyro_z,g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z);
 
-        dbg.printf("%6u,%8.1f,%8.1f,%8.1f,%6.1f,%6.1f,%6.1f,%6.1f,%6.1f,%6.1f\n",HAL_GetTick(),g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
+        //dbg.printf("%6u,%8.1f,%8.1f,%8.1f,%6.1f,%6.1f,%6.1f,%6.1f,%6.1f,%6.1f\n",HAL_GetTick(),g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
         g_icm.gyro_x,g_icm.gyro_y,g_icm.gyro_z,g_lis3.mag_x,g_lis3.mag_y,g_lis3.mag_z);
 
 
-        HAL_Delay(10);
+        HAL_Delay(100);
 
         
 
