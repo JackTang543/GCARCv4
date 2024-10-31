@@ -37,6 +37,10 @@ void sBSP_SPI_TRACK_SendBytes(uint8_t *pData,uint16_t Size);
 void sBSP_SPI_TRACK_RecvBytes(uint8_t *pData,uint16_t Size);
 
 
+void sBSP_SPI_PS2_Init(uint32_t SPI_BAUDRATE);
+void sBSP_SPI_PS2_SetEN(uint8_t en);
+uint8_t sBSP_SPI_PS2_TransferByte(uint8_t send);
+
 
 
 #ifdef __cplusplus

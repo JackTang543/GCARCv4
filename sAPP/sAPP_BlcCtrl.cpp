@@ -60,9 +60,48 @@ void sAPP_BlcCtrl_Init(){
     sLib_IncPIDSetTarget(&pid_inc_pos,0);
 }
 
+#include "sDRV_PS2.h"
+#include "sBSP_UART.h"
 
 void sAPP_BlcCtrl_Handler(){
     #define DT_S (0.010f)    //10ms 100Hz控制周期
+
+    sDRV_PS2_Handler();
+
+    static float input_spd,input_head;
+    input_spd = -(float)(ps2.leftY - 0x7F);
+    input_head = -(float)(ps2.rightX - 0x7F);
+
+    input_head = sLib_Fmap(input_head,-128,127,-180,180);
+
+    if(input_head < 5 && input_head > -5){
+        input_head = 0;
+    }
+
+    g_ctrl.tar_spd = sLib_Fmap(input_spd,-128,127,-200,200);
+
+
+    g_ctrl.tar_head += input_head * DT_S;
+    if(g_ctrl.tar_head > 180){
+        g_ctrl.tar_head -= 360;
+    }
+    if(g_ctrl.tar_head < -180){
+        g_ctrl.tar_head += 360;
+    }
+    
+
+    if(g_ctrl.tar_spd < 5 && g_ctrl.tar_spd > -5){
+        g_ctrl.tar_spd = 0;
+    }
+
+    if(g_ctrl.tar_spd < 5 && g_ctrl.tar_spd > -5){
+        g_ctrl.tar_spd = 0;
+    }
+
+    
+
+
+    //sBSP_UART_Debug_Printf("tar_spd: %6.1f,tar_head:%6.1f \n",g_ctrl.tar_spd,g_ctrl.tar_head);
 
     //如果没有启用平衡就不计算
     if(g_ctrl.blc_en == 0){
@@ -72,6 +111,10 @@ void sAPP_BlcCtrl_Handler(){
         goto PRINT;
         //return;
     }
+
+    
+
+    
 
     if(ahrs.pitch > 45 || ahrs.pitch < -45){
         sDRV_DRV8870_SetRightBrake(1);
@@ -85,12 +128,19 @@ void sAPP_BlcCtrl_Handler(){
     g_blc.left_rpm  = motor.getLRPM();
     g_blc.right_rpm = motor.getRRPM();
 
-    //对编码器读到的转速值转换成线速度并积分
-    g_nav.y_pos += (g_blc.left_rpm - g_blc.right_rpm) * ((2.0f * 3.1416 * WHEEL_RADIUS) / 60.0f) * DT_S;
+    
 
     float inc_pos_out;
 
-    if(g_ctrl.tar_spd == 0){
+    //应用转向环
+    g_blc.turn_out  = TurnPDCtrler (ahrs.yaw);
+
+    if(fabs(g_blc.turn_out) < 10){
+        //对编码器读到的转速值转换成线速度并积分
+        g_nav.y_pos += (g_blc.left_rpm + g_blc.right_rpm) * ((2.0f * 3.1416 * WHEEL_RADIUS) / 60.0f) * DT_S;
+    }
+
+    if(g_ctrl.tar_spd < 1 && g_ctrl.tar_spd > -1){
         inc_pos_out = sLib_IncPIDUpdate(&pid_inc_pos,g_nav.y_pos,DT_S);
         g_ctrl.tar_spd = inc_pos_out;
     }else{
@@ -103,8 +153,7 @@ void sAPP_BlcCtrl_Handler(){
     g_blc.stand_out = StandPDCtrler(ahrs.pitch,ahrs.gyr_x);
     //计算速度环
     g_blc.spd_out   = SpdPICtrler  (g_blc.left_rpm,g_blc.right_rpm);
-    //应用转向环
-    g_blc.turn_out  = TurnPDCtrler (ahrs.yaw);
+    
 
     //合并三环输出
     g_blc.left_pwm  = g_blc.stand_out + g_blc.spd_out + g_blc.turn_out;

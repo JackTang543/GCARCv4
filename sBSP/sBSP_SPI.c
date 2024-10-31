@@ -17,7 +17,7 @@ SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 #define IMU_SPI_HANDLE          hspi2
 
-/*SPI3 -> TRACK*/
+/*SPI3 -> TRACK 或者 PS2手柄*/
 SPI_HandleTypeDef hspi3;
 #define TRACK_SPI_HANDLE        hspi3
 
@@ -110,13 +110,13 @@ void sBSP_SPI_IMU_RecvBytes(uint8_t *pData,uint16_t Size){
     HAL_SPI_Receive(&IMU_SPI_HANDLE,pData,Size,1000);
 }
 
-
 void sBSP_SPI_TRACK_Init(uint32_t SPI_BAUDRATE){
+    //! 未测试
     TRACK_SPI_HANDLE.Instance              = SPI3;
     TRACK_SPI_HANDLE.Init.Mode             = SPI_MODE_MASTER;
     TRACK_SPI_HANDLE.Init.Direction        = SPI_DIRECTION_2LINES;
     TRACK_SPI_HANDLE.Init.DataSize         = SPI_DATASIZE_8BIT;
-    TRACK_SPI_HANDLE.Init.CLKPolarity      = SPI_POLARITY_LOW;
+    TRACK_SPI_HANDLE.Init.CLKPolarity      = SPI_POLARITY_HIGH;
     TRACK_SPI_HANDLE.Init.CLKPhase         = SPI_PHASE_2EDGE;
     TRACK_SPI_HANDLE.Init.NSS              = SPI_NSS_SOFT;
     TRACK_SPI_HANDLE.Init.BaudRatePrescaler= SPI_BAUDRATE;
@@ -139,9 +139,9 @@ void sBSP_SPI_TRACK_SendByte(uint8_t byte){
 }
 
 uint8_t sBSP_SPI_TRACK_RecvByte(){
-    uint8_t send_byte = 0;
-    HAL_SPI_Receive (&TRACK_SPI_HANDLE,&send_byte,1,100);
-    return send_byte;
+    uint8_t byte = 0;
+    HAL_SPI_Receive (&TRACK_SPI_HANDLE,&byte,1,100);
+    return byte;
 }
 
 void sBSP_SPI_TRACK_SendBytes(uint8_t *pData,uint16_t Size){
@@ -152,5 +152,34 @@ void sBSP_SPI_TRACK_RecvBytes(uint8_t *pData,uint16_t Size){
     HAL_SPI_Receive(&TRACK_SPI_HANDLE,pData,Size,1000);
 }
 
+
+void sBSP_SPI_PS2_Init(uint32_t SPI_BAUDRATE){
+    TRACK_SPI_HANDLE.Instance              = SPI3;
+    TRACK_SPI_HANDLE.Init.Mode             = SPI_MODE_MASTER;
+    TRACK_SPI_HANDLE.Init.Direction        = SPI_DIRECTION_2LINES;
+    TRACK_SPI_HANDLE.Init.DataSize         = SPI_DATASIZE_8BIT;
+    TRACK_SPI_HANDLE.Init.CLKPolarity      = SPI_POLARITY_HIGH; //! CPOL=1
+    TRACK_SPI_HANDLE.Init.CLKPhase         = SPI_PHASE_2EDGE; //! PS2手柄 2EDGE CPHA=1
+    TRACK_SPI_HANDLE.Init.NSS              = SPI_NSS_SOFT;
+    TRACK_SPI_HANDLE.Init.BaudRatePrescaler= SPI_BAUDRATE;
+    TRACK_SPI_HANDLE.Init.FirstBit         = SPI_FIRSTBIT_LSB;  //! PS2 LSB
+    TRACK_SPI_HANDLE.Init.TIMode           = SPI_TIMODE_DISABLE;
+    TRACK_SPI_HANDLE.Init.CRCCalculation   = SPI_CRCCALCULATION_DISABLE;
+    TRACK_SPI_HANDLE.Init.CRCPolynomial    = 10;
+
+    if (HAL_SPI_Init(&TRACK_SPI_HANDLE) != HAL_OK){
+        Error_Handler();
+    }
+}
+
+void sBSP_SPI_PS2_SetEN(uint8_t en){
+    en ? __HAL_SPI_ENABLE(&TRACK_SPI_HANDLE) : __HAL_SPI_DISABLE(&TRACK_SPI_HANDLE);
+}
+
+uint8_t sBSP_SPI_PS2_TransferByte(uint8_t send){
+    uint8_t recv = 0;
+    HAL_SPI_TransmitReceive(&TRACK_SPI_HANDLE,&send,&recv,1,1000);
+    return recv;
+}
 
 

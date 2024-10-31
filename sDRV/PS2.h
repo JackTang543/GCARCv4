@@ -58,6 +58,9 @@ extern uint16_t Handkey;
 
 extern int PS2_LX,PS2_LY,PS2_RX,PS2_RY,PS2_KEY;     //PS2遥控相关
 
+
+void PS2_ShortPoll(void);
+
 void vPS2Init(void);
 uint8_t PS2_RedLight(void);   //判断是否为红灯模式
 void PS2_ReadData(void); //读手柄数据

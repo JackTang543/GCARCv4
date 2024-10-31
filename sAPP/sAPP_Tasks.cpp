@@ -3,13 +3,14 @@
 #include "main.h"
 
 
-
 void sAPP_Tasks_AHRS(void* param){
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     for(;;){
         ahrs.update();
         motor.update();
+
+
 
         sAPP_BlcCtrl_Handler();
 

@@ -93,38 +93,9 @@ int main(){
     sAPP_BlcCtrl_Init();
 
     ahrs.init();
-    //ahrs.calcBias();
+    ahrs.calcBias();
 
 
-    __GPIOA_CLK_ENABLE();
-    __GPIOB_CLK_ENABLE();
-    __GPIOC_CLK_ENABLE();
-    __GPIOD_CLK_ENABLE();
-    GPIO_InitTypeDef gpio = {0};
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    gpio.Pin   = TRACK_SCK_Pin|TRACK_MOSI_Pin;
-    HAL_GPIO_Init(GPIOC,&gpio);
-
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    gpio.Pin   = TRACK_CS_Pin;
-    HAL_GPIO_Init(GPIOD,&gpio);
-
-    gpio.Mode  = GPIO_MODE_INPUT;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    gpio.Pin   = TRACK_MISO_Pin;
-    HAL_GPIO_Init(TRACK_MISO_GPIO_Port,&gpio);
-
-    HAL_GPIO_WritePin(TRACK_CS_GPIO_Port,TRACK_CS_Pin,GPIO_PIN_SET);
-    HAL_GPIO_WritePin(GPIOC,TRACK_SCK_Pin,GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOC,TRACK_MOSI_Pin,GPIO_PIN_SET);
-
-
-    PS2_SetInit();
 
     // sBSP_DMA_32MemSet_Init();
     // HAL_Delay(1);
@@ -147,21 +118,20 @@ int main(){
 
 
 
-    // sDRV_PS2_Init();
-
+    sDRV_PS2_Init();
     // motor.setLM(-30);
     // motor.setRM(-30);
 
 
-    // sAPP_Tasks_CreateAll();
-    // sBSP_UART_Debug_Printf("FreeRTOS启动任务调度\n");
-    // vTaskStartScheduler();    
+    sAPP_Tasks_CreateAll();
+    sBSP_UART_Debug_Printf("FreeRTOS启动任务调度\n");
+    vTaskStartScheduler();    
 
     while(1){
         //sBSP_UART_Top_Printf("Hello,CC2530!\n");
         //sBSP_UART_Debug_Printf("Hello,STM32!\n");
 
-        bReadPS2Data();
+        //bReadPS2Data();
 
 
         // dbg.printf("%u,%.4f,%.4f,%.4f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",HAL_GetTick(),g_icm.acc_x,g_icm.acc_y,g_icm.acc_z,\
