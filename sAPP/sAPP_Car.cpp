@@ -64,7 +64,7 @@ int sAPP_Car::initBoard(){
 
     sBSP_ADC_Init();
 
-    sDRV_GenOLED_Init();
+    // sDRV_GenOLED_Init();
 
 
     return 0;

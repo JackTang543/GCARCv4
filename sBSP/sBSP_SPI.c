@@ -12,6 +12,7 @@
 /*SPI1 -> OLED*/
 SPI_HandleTypeDef hspi1;
 #define OLED_SPI_HANDLE         hspi1
+DMA_HandleTypeDef hdma_spi1_tx;
 
 /*SPI2 -> IMU*/
 SPI_HandleTypeDef hspi2;
@@ -61,6 +62,8 @@ uint8_t sBSP_SPI_OLED_RecvByte(){
 
 void sBSP_SPI_OLED_SendBytes(uint8_t *pData,uint16_t Size){
     HAL_SPI_Transmit(&OLED_SPI_HANDLE,pData,Size,1000);
+    //HAL_SPI_Transmit_DMA(&OLED_SPI_HANDLE,pData,Size);
+    //while(HAL_SPI_GetState(&OLED_SPI_HANDLE) != HAL_SPI_STATE_READY);
 }
 
 void sBSP_SPI_OLED_RecvBytes(uint8_t *pData,uint16_t Size){

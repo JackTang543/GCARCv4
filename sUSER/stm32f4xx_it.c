@@ -10,6 +10,9 @@ extern UART_HandleTypeDef uart6;
 extern TIM_HandleTypeDef htim6;
 
 
+extern DMA_HandleTypeDef hdma_spi1_tx;
+
+
 
 void NMI_Handler(void){
   while (1){
@@ -60,8 +63,14 @@ void USART6_IRQHandler(void){
     HAL_UART_IRQHandler(&uart6);
 }
 
+
+
 void DMA2_Stream2_IRQHandler(void){
     HAL_DMA_IRQHandler(&hdma_usart1_rx);
+}
+
+void DMA2_Stream5_IRQHandler(void){
+    HAL_DMA_IRQHandler(&hdma_spi1_tx);
 }
 
 void DMA2_Stream7_IRQHandler(void){

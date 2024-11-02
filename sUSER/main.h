@@ -15,6 +15,8 @@
 #include "task.h"
 
 
+#include "sG2D.hpp"
+
 
 /*APP*/
 #include "sAPP_IMU.hpp"
@@ -27,7 +29,7 @@
 #include "sAPP_BlcCtrl.hpp"
 
 /*MID*/
-#include "sGraphic2D.h"
+// #include "sGraphic2D.h"
 #include "sDRV_GenOLED.h"
 #include "cm_backtrace.h"
 

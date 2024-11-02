@@ -372,7 +372,7 @@
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\build\Debug\GCARCv4.sct</ScatterFile>
+            <ScatterFile>build/Debug/GCARCv4.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -584,26 +584,6 @@
               <FileName>sLib_Reg.c</FileName>
               <FileType>1</FileType>
               <FilePath>sMID/sLib/sLib_Reg.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>SMID/SGRAPHIC2D</GroupName>
-          <Files>
-            <File>
-              <FileName>sAPP_Font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sAPP_Font.c</FilePath>
-            </File>
-            <File>
-              <FileName>sDRV_GenOLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sDRV_GenOLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>sGraphic2D.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sGraphic2D.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1152,6 +1132,31 @@
                   </Aads>
                 </FileArmAds>
               </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SMID/SGRAPHIC2D</GroupName>
+          <Files>
+            <File>
+              <FileName>sAPP_Font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sAPP_Font.c</FilePath>
+            </File>
+            <File>
+              <FileName>sDRV_GenOLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sDRV_GenOLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>sG2D.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sMID/sGraphic2D/sG2D.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sGraphic2D.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sGraphic2D.c</FilePath>
             </File>
           </Files>
         </Group>

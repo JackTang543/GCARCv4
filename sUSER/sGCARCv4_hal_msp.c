@@ -8,6 +8,9 @@ extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 
 
+extern DMA_HandleTypeDef hdma_spi1_tx;
+
+
 void HAL_MspInit(void)
 {
 
@@ -54,7 +57,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart){
         hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
         hdma_usart1_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
         hdma_usart1_rx.Init.Mode                = DMA_NORMAL;
-        hdma_usart1_rx.Init.Priority            = DMA_PRIORITY_LOW;
+        hdma_usart1_rx.Init.Priority            = DMA_PRIORITY_HIGH;
         hdma_usart1_rx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
         
         if(HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK){
@@ -221,7 +224,32 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle){
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+        /* SPI1 DMA Init */
+        /* SPI1_TX Init */
+        hdma_spi1_tx.Instance = DMA2_Stream5;
+        hdma_spi1_tx.Init.Channel = DMA_CHANNEL_3;
+        hdma_spi1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+        hdma_spi1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+        hdma_spi1_tx.Init.MemInc = DMA_MINC_ENABLE;
+        hdma_spi1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hdma_spi1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        hdma_spi1_tx.Init.Mode = DMA_NORMAL;
+        hdma_spi1_tx.Init.Priority = DMA_PRIORITY_LOW;
+        hdma_spi1_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+        hdma_spi1_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+        hdma_spi1_tx.Init.MemBurst = DMA_MBURST_INC16;
+        hdma_spi1_tx.Init.PeriphBurst = DMA_PBURST_SINGLE;
+        if(HAL_DMA_Init(&hdma_spi1_tx) != HAL_OK){
+            Error_Handler();
         }
+        __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi1_tx);
+
+        /* DMA2_Stream5_IRQn interrupt configuration */
+        HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 10, 0);
+        HAL_NVIC_EnableIRQ  (DMA2_Stream5_IRQn);
+
+    }
     else if(spiHandle->Instance==SPI2){
         __HAL_RCC_SPI2_CLK_ENABLE();
         __HAL_RCC_GPIOC_CLK_ENABLE();

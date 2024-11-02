@@ -16,6 +16,10 @@
  * v1.2  2024.10.12inHNIP9607
  * 说明：改进,在文件内初始化 设置CS 设置RST
  * 
+ * v1.3  2024.10.31inHNIP9607
+ * 说明: 改进:优化刷屏方式,从原来的SPI带宽21MBit/s时10.1ms,优化到1.02ms,O3优化:0.52ms
+ * 
+ * 
  */
 
 //伽马矫正值
@@ -28,6 +32,7 @@
 //#define SH1106_1D3INCH
 //#define SSD1306_0D91INCH
 #define SSD1306_0D96INCH
+
 
 #ifdef USE_4WSPI
     #include "sBSP_SPI.h"
@@ -270,6 +275,8 @@ static inline void setRST(uint8_t lv){
     HAL_GPIO_WritePin(RST_GPIO,RST_GPIO_PIN,(GPIO_PinState)lv);
 }
 
+
+
 //写单字节命令
 static inline void write_comm1b(uint8_t comm1){
     #ifdef USE_4WSPI
@@ -329,6 +336,18 @@ static inline void write_data(uint8_t data){
         #endif
     #endif
 }
+
+static inline void write_bytes(uint8_t* pData,uint16_t len){
+    #ifdef USE_4WSPI
+        setCS(0);
+        setDC(1);
+        sBSP_SPI_OLED_SendBytes(pData,len);
+        setCS(1);
+    #else
+
+    #endif
+}
+
 
 /**
   * @brief  初始化
@@ -415,8 +434,10 @@ int8_t sDRV_GenOLED_Init(){
     #if defined(SSD1306_0D91INCH) || defined(SSD1306_0D96INCH)
         //关闭显示
         write_comm1b(__COMM_DISPLAY_OFFON(0));
-        //设置内存寻址模式
-        write_comm2b(__COMM_SET_MEM_ADDRING_MODE,__COMM_SET_MEM_ADDRING_MODE_DATA(0x02));
+        //设置内存寻址模式:默认模式
+        // write_comm2b(__COMM_SET_MEM_ADDRING_MODE,__COMM_SET_MEM_ADDRING_MODE_DATA(0x02));
+        //设置内存寻址模式:页寻址模式,这样就不用每次发完1page重新修改page了,自增~,一次就能发整个屏幕
+        write_comm2b(__COMM_SET_MEM_ADDRING_MODE,__COMM_SET_MEM_ADDRING_MODE_DATA(0b00));
         //设置页起始地址
         write_comm1b(__COMM_SET_PAGE_ADDR(0));
         //设置显示方向
@@ -493,62 +514,30 @@ void sDRV_GenOLED_SetVerticalFlip(uint8_t is_flip){
   *
   * @return 无
   */
-void sDRV_GenOLED_UpdateScreen(){
-    for(uint8_t page = 0; page < 8; page++){
-        //128x64 for SH1106
-        #ifdef SH1106_1D3INCH
-            //设置起始列,起始行
-            write_comm2b(__COMM_SET_LOW_COL_ADDR(2),__COMM_SET_HIGH_COL_ADDR(0));
-            write_comm1b(__COMM_SET_PAGE_ADDR(page));
-            //! 注意这里只能用两个for来刷新,不支持连续写入(在I2C模式下)
-            for(uint16_t i = 0;i < 128; i++){
-                write_data(GRAM[i][page]);
-            }
-        #endif
-
-        //128x64 for SSD1306_0D96INCH
-        #ifdef SSD1306_0D96INCH
-            //设置起始列,起始行
-            write_comm2b(__COMM_SET_LOW_COL_ADDR(0),__COMM_SET_HIGH_COL_ADDR(0));
-            write_comm1b(__COMM_SET_PAGE_ADDR(page));
-            //! 注意这里只能用两个for来刷新,不支持连续写入(在I2C模式下)
-            for(uint16_t i = 0;i < 128; i++){
-                write_data(GRAM[i][page]);
-            }
-        #endif
-    }
-
-    //128x32 for SSD1306_0D91INCH
-    #ifdef SSD1306_0D91INCH
-        for(uint8_t page = 0; page < 4; page++){
-            //设置起始列,起始行
-            write_comm2b(__COMM_SET_LOW_COL_ADDR(0),__COMM_SET_HIGH_COL_ADDR(0));
-            write_comm1b(__COMM_SET_PAGE_ADDR(page));
-            //! 注意这里只能用两个for来刷新,不支持连续写入(在I2C模式下)
-            for(uint16_t i = 0;i < 128; i++){
-                write_data(GRAM[i][page]);
-            }
-        }
+void sDRV_GenOLED_UpdateScreen(uint8_t* gram){
+    #ifdef SH1106_1D3INCH
+        //设置起始列,起始行
+        write_comm2b(__COMM_SET_LOW_COL_ADDR(2),__COMM_SET_HIGH_COL_ADDR(0));
+        write_comm1b(__COMM_SET_PAGE_ADDR(page));
+        //一次发送1KB,刷新整个屏幕
+        write_bytes(gram,1024);
     #endif
-}
-
-
-void sDRV_GenOLED_FastUpdateScreen(){
-
     #ifdef SSD1306_0D96INCH
-        for(uint8_t page = 0; page < 8; page++){
-            //设置起始列,起始行
-            write_comm2b(__COMM_SET_LOW_COL_ADDR(0),__COMM_SET_HIGH_COL_ADDR(0));
-            write_comm1b(__COMM_SET_PAGE_ADDR(page));
-            setCS(0);
-            setDC(1);
-            //sBSP_DMA2S1_32MemToSPI1((uint32_t*)&GRAM[0][page],128);
-            setCS(1);
-
-        }
-
+        //设置起始列,起始行
+        write_comm2b(__COMM_SET_LOW_COL_ADDR(0),__COMM_SET_HIGH_COL_ADDR(0));
+        write_comm1b(__COMM_SET_PAGE_ADDR(0));
+        //一次发送1KB,刷新整个屏幕
+        write_bytes(gram,128 * 8);
+    #endif
+    #ifdef SSD1306_0D91INCH
+        //设置起始列,起始行
+        write_comm2b(__COMM_SET_LOW_COL_ADDR(0),__COMM_SET_HIGH_COL_ADDR(0));
+        write_comm1b(__COMM_SET_PAGE_ADDR(0));
+        //一次发送512B,刷新整个屏幕
+        write_bytes((uint8_t*)&GRAM[0],512);
     #endif
 }
+
 
 
 
