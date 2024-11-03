@@ -18,7 +18,7 @@
 
 #include "sAPP_Font.h"
 
-
+#include "sDBG_Debug.h"
 
 
 
@@ -39,7 +39,7 @@ public:
     void setDot(uint16_t x, uint16_t y, bool dot_en);
     bool getDot(uint16_t x, uint16_t y);
     void inv_area(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-    void set_byte(uint16_t x, uint16_t y, uint16_t data);
+    void set_byte(uint16_t x, uint16_t y, uint8_t data);
     void write_char(uint16_t x,uint16_t y,sCGRAM_Char_t user_char);
 
     void write_number(uint8_t x,uint8_t y,uint32_t num);
@@ -59,7 +59,9 @@ public:
 
     void setAll(bool px_en);
 
-    void updateScreen();
+
+
+    void handler();
 
 
 
@@ -74,6 +76,7 @@ private:
 
     void swap_buf();
     void attachFPSInfo();
+    void updateScreen();
 
 
 

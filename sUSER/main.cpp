@@ -120,7 +120,7 @@ int main(){
         oled.printf(10,50,"%u",i);
         i++;
         sBSP_DWT_MeasureStart();
-        oled.updateScreen();
+        oled.handler();
         oled.setAll(0);
         sBSP_DWT_MeasureEnd();
         sBSP_UART_Debug_Printf("%uus\n",sBSP_DWT_GetMeasure_us());

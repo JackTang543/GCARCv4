@@ -9,6 +9,8 @@ extern UART_HandleTypeDef uart6;
 
 extern TIM_HandleTypeDef htim6;
 
+extern SPI_HandleTypeDef hspi1;
+
 
 extern DMA_HandleTypeDef hdma_spi1_tx;
 
@@ -77,10 +79,13 @@ void DMA2_Stream7_IRQHandler(void){
     HAL_DMA_IRQHandler(&hdma_usart1_tx);
 }
 
+void SPI1_IRQHandler(void){
+    HAL_SPI_IRQHandler(&hspi1);
+}
 
 void TIM6_DAC_IRQHandler(void){
-  uwTick++;
-  HAL_TIM_IRQHandler(&htim6);
+    uwTick++;
+    HAL_TIM_IRQHandler(&htim6);
 }
 
 

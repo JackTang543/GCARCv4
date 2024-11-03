@@ -43,15 +43,10 @@
 //选择是否使用硬件RST
 #define USE_HW_RST
 
-//选择SPI模式下DC CS RST的GPIO口
+//选择SPI模式下DC RST的GPIO口
 #define DC_GPIO             GPIOA
 #define DC_GPIO_PIN         GPIO_PIN_6
 #define DC_GPIO_CLK_EN      __GPIOA_CLK_ENABLE
-
-//PA15 -> CS
-#define CS_GPIO_CLK_EN      __GPIOA_CLK_ENABLE
-#define CS_GPIO             GPIOA
-#define CS_GPIO_PIN         GPIO_PIN_15
 
 //PB12 -> RST
 #define RST_GPIO_CLK_EN      __GPIOB_CLK_ENABLE
@@ -236,17 +231,6 @@ static void init_dc_gpio(){
     HAL_GPIO_Init(DC_GPIO,&gpio);
 }
 
-static void init_cs_gpio(){
-    //pinMode(14,OUTPUT);
-
-    CS_GPIO_CLK_EN();
-    GPIO_InitTypeDef gpio;
-    gpio.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio.Pin = CS_GPIO_PIN;
-    gpio.Pull = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(CS_GPIO,&gpio);
-}
 
 //设置DC电平:DC=1 data,DC=0,comm
 static inline void setDC(uint8_t is_data){
@@ -255,7 +239,7 @@ static inline void setDC(uint8_t is_data){
 }
 //设置CS
 static inline void setCS(uint8_t lv){
-    HAL_GPIO_WritePin(CS_GPIO,CS_GPIO_PIN,(GPIO_PinState)lv);
+    sBSP_SPI_OLED_SetCS(lv);
 }
 #endif
 
@@ -273,6 +257,11 @@ static void init_rst_gpio(){
 //设置RST
 static inline void setRST(uint8_t lv){
     HAL_GPIO_WritePin(RST_GPIO,RST_GPIO_PIN,(GPIO_PinState)lv);
+}
+
+
+static inline bool portGetSPIIsIdle(){
+    return sBSP_SPI_OLED_IsIdle();
 }
 
 
@@ -342,7 +331,7 @@ static inline void write_bytes(uint8_t* pData,uint16_t len){
         setCS(0);
         setDC(1);
         sBSP_SPI_OLED_SendBytes(pData,len);
-        setCS(1);
+        //setCS(1);
     #else
 
     #endif
@@ -360,7 +349,6 @@ int8_t sDRV_GenOLED_Init(){
     //选择初始化SPI还是I2C
     #ifdef USE_4WSPI
         init_dc_gpio();
-        init_cs_gpio();
         
         if(sBSP_SPI_OLED_Init(SPI_BAUDRATEPRESCALER_4) != 0){
             return -1;
@@ -536,6 +524,10 @@ void sDRV_GenOLED_UpdateScreen(uint8_t* gram){
         //一次发送512B,刷新整个屏幕
         write_bytes((uint8_t*)&GRAM[0],512);
     #endif
+}
+
+bool sDRV_GenOLED_IsIdle(){
+    return portGetSPIIsIdle();
 }
 
 

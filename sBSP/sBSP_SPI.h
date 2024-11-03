@@ -5,6 +5,7 @@ extern "C" {
 
 #include "stm32f4xx_hal.h"
 
+#include <stdbool.h>
 #include "stm32f4xx_it.h"
     
 extern SPI_HandleTypeDef hspi1;
@@ -12,10 +13,13 @@ extern SPI_HandleTypeDef hspi1;
 
 /*OLED SPI interface*/
 int sBSP_SPI_OLED_Init(uint32_t SPI_BAUDRATE);
+void sBSP_SPI_OLED_SetCS(bool cs_lv);
 void sBSP_SPI_OLED_SetEN(uint8_t en);
 void sBSP_SPI_OLED_SendByte(uint8_t byte);
 uint8_t sBSP_SPI_OLED_RecvByte();
 void sBSP_SPI_OLED_SendBytes(uint8_t *pData,uint16_t Size);
+bool sBSP_SPI_OLED_IsIdle();
+
 void sBSP_SPI_OLED_RecvBytes(uint8_t *pData,uint16_t Size);
 
 

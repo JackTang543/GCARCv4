@@ -76,14 +76,14 @@ void sG2D::inv_area(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1){
     for (y = y0; y <= y1; y++) {
         for (x = x0; x <= x1; x++) {
             uint8_t currentDot = getDot(x, y);
-            setDot(x, y, !currentDot);  // 翻转像素状态
+            setDot(x, y, !currentDot);  //翻转像素状态
         }
     }
 }
 
 //写入一竖列(8个点)
-void sG2D::set_byte(uint16_t x, uint16_t y, uint16_t data){
-    for(uint16_t i = 0;i < 8;i++){
+void sG2D::set_byte(uint16_t x, uint16_t y, uint8_t data){
+    for(uint8_t i = 0;i < 8;i++){
         if(data & (1 << i)){
             setDot(x,y + i,1);
         }
@@ -224,8 +224,10 @@ void sG2D::attachFPSInfo(){
 
 void sG2D::setAll(bool px_en){
     if(px_en){
+        //memset(&this->draw_buf[0],0xFF,this->buf_size);
         portM2M_DMA_MemSetByte(0xFF,(uint8_t*)&this->draw_buf[0],buf_size);
     }else{
+        //memset(&this->draw_buf[0],0x00,this->buf_size);
         portM2M_DMA_MemSetByte(0x00,(uint8_t*)&this->draw_buf[0],buf_size);
     }
 }
@@ -238,13 +240,46 @@ void sG2D::updateScreen(){
     attachFPSInfo();
     
 
-    //todo 还没有处理GRAM
     sDRV_GenOLED_UpdateScreen(this->draw_buf);
-    //sDRV_GenOLED_FastUpdateScreen();
+    swap_buf();
+    //HAL_Delay(10);
 }
 
 
+void sG2D::handler(){
+    if(sDRV_GenOLED_IsIdle() == false){
+        sDBG_Debug_Printf("false\n");
+        return;
+    }
 
+
+
+
+    updateScreen();
+    
+}
+
+
+/**
+ * todo 1102 引入双缓冲区模式,检查上次刷新是否完成,如果完成
+ * 在updateScreen里发送更新上一帧屏幕后切换缓冲区,否则return
+ * 
+ * 新更新:
+ * 在用户写入数据时,使用链表add画面的改动,比如在某个地方画个什么东西/字符
+ * 然后return表示完成.这个过程很快.
+ * 然后在DMA发送过程中,pop链表里的改动,应用到屏幕上,然后检查上一帧是否完成,
+ * 如果完成则发送新的DMA,否则return.
+ * 
+ * 注意帧率计算
+ * 
+ * 动画必须基于事件,也就是不能直接写GRAM
+ * 
+ * 
+ * 动画,简单线性动画
+ * 
+ * 简单非线性动画
+ * 
+ */
 
 
 void sG2D::swap_buf(){

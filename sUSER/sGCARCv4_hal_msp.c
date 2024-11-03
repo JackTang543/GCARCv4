@@ -225,6 +225,9 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle){
         GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+        HAL_NVIC_SetPriority(SPI1_IRQn, 3, 0);
+        HAL_NVIC_EnableIRQ  (SPI1_IRQn);
+
         /* SPI1 DMA Init */
         /* SPI1_TX Init */
         hdma_spi1_tx.Instance = DMA2_Stream5;
@@ -246,7 +249,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle){
         __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi1_tx);
 
         /* DMA2_Stream5_IRQn interrupt configuration */
-        HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 10, 0);
+        HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 3, 0);
         HAL_NVIC_EnableIRQ  (DMA2_Stream5_IRQn);
 
     }

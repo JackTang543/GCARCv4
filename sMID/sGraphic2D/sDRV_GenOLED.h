@@ -6,6 +6,7 @@ extern "C"{
 
 #include "stm32f4xx_hal.h"
 #include <math.h>
+#include <stdbool.h>
 // #include "sBSP_DMA.h"
 
 
@@ -25,6 +26,7 @@ void sDRV_GenOLED_SetHorizontalFlip(uint8_t is_flip);
 void sDRV_GenOLED_SetVerticalFlip(uint8_t is_flip);
 
 void sDRV_GenOLED_UpdateScreen(uint8_t* gram);
+bool sDRV_GenOLED_IsIdle();
 
 
 #ifdef __cplusplus

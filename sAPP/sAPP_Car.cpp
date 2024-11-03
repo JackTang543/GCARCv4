@@ -24,7 +24,7 @@ int sAPP_Car::initSys(){
     HAL_Init();
     //初始化RCC
     sBSP_RCC_Init();
-    HAL_InitTick(0);
+    HAL_InitTick(4);
     //获取时钟频率
     coreClk = HAL_RCC_GetSysClockFreq();
     //初始化DWT
