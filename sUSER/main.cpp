@@ -78,6 +78,25 @@ void check_memory(const void *mem, size_t size, uint8_t target_value) {
     sBSP_UART_Debug_Printf("内存中的所有字节都为 0x%08X\n", target_value);
 }
 
+class MyData {
+public:
+    int id;
+    char name[10];
+
+    MyData(int val, const char* name) {
+        strcpy(this->name, name);
+        this->id = val;
+    }
+
+    void print() const {
+        sDBG_Debug_Printf("id:%d, name:%s\n", this->id, this->name);
+    }
+
+    sG2D_ListNode node;
+};
+
+
+
 int main(){
     car.initSys();
     car.initBoard();
@@ -114,9 +133,49 @@ int main(){
     // vTaskStartScheduler();    
     int i = 0;
 
+    size_t freeHeapSize = 0;
+
+    freeHeapSize = xPortGetFreeHeapSize();
+    sDBG_Debug_Printf("Current free heap size: %u bytes\n", (unsigned int)freeHeapSize);
+
+    MyData* data1 = new MyData(1,"szk");
+    MyData* data2 = new MyData(2,"dazhu");
+    MyData* data3 = new MyData(3,"laowang");
+
+    sG2D_List* list = new sG2D_List();
+
+    // 添加节点到链表
+    list->append(&data1->node);
+    MyData* dat1 = container_of(&data1->node, MyData, node);
+    list->append(&data2->node);
+    MyData* dat2 = container_of(&data2->node, MyData, node);
+    list->append(&data3->node);
+    MyData* dat3 = container_of(&data3->node, MyData, node);
+
+    freeHeapSize = xPortGetFreeHeapSize();
+    sDBG_Debug_Printf("Current free heap size: %u bytes\n", (unsigned int)freeHeapSize);
+
+    dat1->print();
+    dat2->print();
+    dat3->print();
+
+    list->remove(&data1->node);
+
+    dat1->print();
+    dat2->print();
+    dat3->print();
+
+    delete data1;
+    delete data2;
+    delete data3;
+    delete list;
+
+    freeHeapSize = xPortGetFreeHeapSize();
+    sDBG_Debug_Printf("Current free heap size: %u bytes\n", (unsigned int)freeHeapSize);
 
 
-    // while(1);
+
+    while(1);
     while(1){
         oled.printf(10,50,"%u",i);
         i++;

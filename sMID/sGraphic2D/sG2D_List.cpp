@@ -4,7 +4,7 @@
 
 
 
-static inline void* portMalloc(std::size_t size) {
+static inline void* portMalloc(size_t size) {
     return pvPortMalloc(size);
 }
 
@@ -13,89 +13,55 @@ static inline void portFree(void* ptr) {
 }
 
 
-//==================Node成员函数实现==================
 
-template <typename T>
-sG2D_List<T>::sG2D_Node::sG2D_Node(const T& value) : data(value), next(nullptr), prev(nullptr) {}
 
-template <typename T>
-sG2D_List<T>::sG2D_Node::~sG2D_Node() {
-    // 如果 T 是指针类型，且需要手动释放内存，可以在这里处理
-}
 
-// 重载 new 操作符
-template <typename T>
-void* sG2D_List<T>::sG2D_Node::operator new(std::size_t size) {
-    void* ptr = portMalloc(size);
-    if (!ptr) {
-        // 根据需要处理内存分配失败的情况
-        // 可以抛出异常或其他方式处理
-        // for (;;);  // 死循环等待
-        sDBG_Debug_Warning("sG2D_Node内存分配失败");
+// 添加节点到链表末尾
+void sG2D_List::append(sG2D_ListNode* node) {
+    // 如果是第一个元素
+    if (this->head == nullptr) {
+        this->head = node;
+        node->prev = nullptr;
+        node->next = nullptr;
     }
-    return ptr;
+    // 不是第一个元素
+    else {
+        // 遍历到链表的末尾
+        sG2D_ListNode* current = this->head;
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        // 在链表末尾添加新节点
+        current->next = node;
+        node->prev = current;
+        node->next = nullptr;
+    }
 }
 
-// 重载 delete 操作符
-template <typename T>
-void sG2D_List<T>::sG2D_Node::operator delete(void* ptr) noexcept {
-    portFree(ptr);
-}
-
-
-// ================== List 成员函数实现 ==================
-
-template <typename T>
-sG2D_List<T>::sG2D_List() : head(nullptr), tail(nullptr), sz(0) {}
-
-template <typename T>
-sG2D_List<T>::~sG2D_List() {
-    clear();
-}
-
-template <typename T>
-void sG2D_List<T>::push_back(const T& value) {
-    sG2D_Node* node = new sG2D_Node(value);
-    if (!node) {
+// 从链表中移除指定节点
+void sG2D_List::remove(sG2D_ListNode* node) {
+    if (node == nullptr) {
         return;
     }
-    if (!head) {
-        head = tail = node;
-    } else {
-        node->prev = tail;
-        tail->next = node;
-        tail = node;
+    // 如果节点是头节点
+    if (node == this->head) {
+        this->head = node->next;
+        if (this->head != nullptr) {
+            this->head->prev = nullptr;
+        }
     }
-    ++sz;
-}
-
-template <typename T>
-void sG2D_List<T>::pop_back() {
-    if (!tail) return;
-    sG2D_Node* node = tail;
-    tail = tail->prev;
-    if (tail)
-        tail->next = nullptr;
-    else
-        head = nullptr;
-    delete node;
-    --sz;
-}
-
-template <typename T>
-void sG2D_List<T>::clear() {
-    while (head) {
-        pop_back();
+    else {
+        // 更新前一个节点的 next 指针
+        if (node->prev != nullptr) {
+            node->prev->next = node->next;
+        }
+        // 更新后一个节点的 prev 指针
+        if (node->next != nullptr) {
+            node->next->prev = node->prev;
+        }
     }
+    // 断开节点的前后链接
+    node->prev = nullptr;
+    node->next = nullptr;
 }
-
-template <typename T>
-std::size_t sG2D_List<T>::size() const {
-    return sz;
-}
-
-
-template class sG2D_List<int>;
-
-
 
