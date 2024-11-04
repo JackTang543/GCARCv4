@@ -1,6 +1,5 @@
 #include "sG2D.hpp"
 
-#include "FreeRTOS.h"
 
 #include "sDRV_GenOLED.h"
 #include "sBSP_DMA.h"
@@ -241,16 +240,14 @@ void sG2D::updateScreen(){
     
 
     sDRV_GenOLED_UpdateScreen(this->draw_buf);
+    //交换缓冲区,让DMA读取刷屏缓冲区,我写绘制缓冲区
     swap_buf();
-    //HAL_Delay(10);
 }
 
 
 void sG2D::handler(){
-    if(sDRV_GenOLED_IsIdle() == false){
-        sDBG_Debug_Printf("false\n");
-        return;
-    }
+    //检查上一帧是否刷完
+    if(sDRV_GenOLED_IsIdle() == false) return;
 
 
 
@@ -263,6 +260,7 @@ void sG2D::handler(){
 /**
  * todo 1102 引入双缓冲区模式,检查上次刷新是否完成,如果完成
  * 在updateScreen里发送更新上一帧屏幕后切换缓冲区,否则return
+ * 完成241103 PM0147
  * 
  * 新更新:
  * 在用户写入数据时,使用链表add画面的改动,比如在某个地方画个什么东西/字符

@@ -116,6 +116,7 @@ int main(){
 
 
 
+    // while(1);
     while(1){
         oled.printf(10,50,"%u",i);
         i++;

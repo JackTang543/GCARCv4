@@ -588,31 +588,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>SMID/SGRAPHIC2D</GroupName>
-          <Files>
-            <File>
-              <FileName>sAPP_Font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sAPP_Font.c</FilePath>
-            </File>
-            <File>
-              <FileName>sDRV_GenOLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sDRV_GenOLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>sG2D.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>sMID/sGraphic2D/sG2D.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>sGraphic2D.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>sMID/sGraphic2D/sGraphic2D.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>SMID/SGENBTNDRV2</GroupName>
           <Files>
             <File>
@@ -1161,6 +1136,36 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>SMID/SGRAPHIC2D</GroupName>
+          <Files>
+            <File>
+              <FileName>sAPP_Font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sAPP_Font.c</FilePath>
+            </File>
+            <File>
+              <FileName>sDRV_GenOLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sDRV_GenOLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>sG2D.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sMID/sGraphic2D/sG2D.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sG2D_List.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>sMID/sGraphic2D/sG2D_List.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sGraphic2D.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>sMID/sGraphic2D/sGraphic2D.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>SUSER</GroupName>
           <Files>
             <File>
@@ -1670,7 +1675,7 @@
           <Files>
             <File>
               <FileName>arm_cortexM4lf_math.lib</FileName>
-              <FileType>4</FileType>
+              <FileType>5</FileType>
               <FilePath>sLIB/DSP/arm_cortexM4lf_math.lib</FilePath>
             </File>
           </Files>
